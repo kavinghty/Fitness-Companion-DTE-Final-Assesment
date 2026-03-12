@@ -15,7 +15,7 @@ print ("Database setup complete.")
 cursor = connection.cursor()
 
 
-cursor.execute("INSERT INTO Users(FNAME, LNAME, PASSWORD) VALUES ('Kavin', 'Thomson', 'password123')")
+cursor.execute("INSERT INTO Users(FNAME, LNAME, EMAIL, PASSWORD) VALUES ('Kavin', 'Thomson', 'kavin.thomson@gmail.com', 'password123')")
 cursor.execute("Select * FROM Users")
 result = cursor.fetchall()
 
