@@ -6,9 +6,13 @@ body {
 }
 
 button {
-    margin: 5px;
-    padding: 10px;
+    margin-right: 10px;
+    padding: 10px 16px;
     cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #111317;
+    color: white;
 }
 
 .page {
