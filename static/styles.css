@@ -1,0 +1,17 @@
+body {
+    background-color: #0a0b0d;
+    color: white;
+    font-family: Arial;
+    padding: 20px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.page {
+    display: none;
+    margin-top: 20px;
+}
