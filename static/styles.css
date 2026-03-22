@@ -15,3 +15,11 @@ button {
     display: none;
     margin-top: 20px;
 }
+.nav {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
