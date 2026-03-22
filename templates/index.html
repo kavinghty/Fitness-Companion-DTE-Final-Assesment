@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fitness Companion</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+
     <h1>Fitness Companion</h1>
-    <p>Welcome to Fitness Companion</p>
+
+    <button onclick="showPage('dashboard')">Dashboard</button>
+    <button onclick="showPage('routines')">Routines</button>
+    <button onclick="showPage('exercises')">Exercises</button>
+
+    <div id="dashboard" class="page">Dashboard Page</div>
+    <div id="routines" class="page">Routines Page</div>
+    <div id="exercises" class="page">Exercises Page</div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
