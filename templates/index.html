@@ -6,21 +6,39 @@
 </head>
 <body>
 
-<h1>Fitness Companion</h1>
+    <h1>Fitness Companion</h1>
 
-<div class="nav">
-    <button onclick="showPage('dashboard')">Dashboard</button>
-    <button onclick="showPage('routines')">Routines</button>
-    <button onclick="showPage('exercises')">Exercises</button>
-</div>
+    <div class="nav">
+        <button onclick="showPage('dashboard')">Dashboard</button>
+        <button onclick="showPage('routines')">Routines</button>
+        <button onclick="showPage('exercises')">Exercises</button>
+    </div>
 
-<div id="dashboard" class="page">
-    <h2>Welcome Back</h2>
-    <p>Track your progress and start your next workout</p>
-</div>
-<div id="routines" class="page">Routines Page</div>
-<div id="exercises" class="page">Exercises Page</div>
+    <div id="dashboard" class="page" style="display: block;">
+        <h2>Welcome Back</h2>
+        <p>Track your progress and start your next workout</p>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+        <div class="cards">
+            <div class="card">
+                <p>Total Workouts</p>
+                <h3>0</h3>
+            </div>
+
+            <div class="card">
+                <p>Active Routines</p>
+                <h3>0</h3>
+            </div>
+
+            <div class="card">
+                <p>Last Duration</p>
+                <h3>--</h3>
+            </div>
+        </div>
+    </div>
+
+    <div id="routines" class="page">Routines Page</div>
+    <div id="exercises" class="page">Exercises Page</div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
