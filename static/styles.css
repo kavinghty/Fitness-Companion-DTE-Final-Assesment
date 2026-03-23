@@ -41,3 +41,17 @@ h1 {
     border-radius: 10px;
     flex: 1;
 }
+
+input {
+    padding: 8px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+#routine-list p {
+    background-color: #111317;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+}

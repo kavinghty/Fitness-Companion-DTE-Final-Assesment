@@ -37,13 +37,23 @@
     </div>
 
     <div id="routines" class="page">
-    <h2>Routine Library</h2>
-    <p>Manage your workout routines</p>
-</div>
+        <h2>Routine Library</h2>
+        <p>Manage your workout routines</p>
+
+        <button onclick="toggleForm()">Create Routine</button>
+
+        <div id="routine-form" style="display: none; margin-top: 20px;">
+            <input type="text" id="routine-name" placeholder="Routine name">
+            <button onclick="addRoutine()">Save</button>
+        </div>
+
+        <div id="routine-list"></div>
+    </div>
+
     <div id="exercises" class="page">
-    <h2>Exercise Database</h2>
-    <p>Browse different movements</p>
-</div>
+        <h2>Exercise Database</h2>
+        <p>Browse different movements</p>
+    </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
