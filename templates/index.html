@@ -3,57 +3,70 @@
 <head>
     <title>Fitness Companion</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
-    <h1>Fitness Companion</h1>
-
-    <div class="nav">
-        <button onclick="showPage('dashboard')">Dashboard</button>
-        <button onclick="showPage('routines')">Routines</button>
-        <button onclick="showPage('exercises')">Exercises</button>
-    </div>
-
-    <div id="dashboard" class="page" style="display: block;">
-        <h2>Welcome Back</h2>
-        <p>Track your progress and start your next workout</p>
-
-        <div class="cards">
-            <div class="card">
-                <p>Total Workouts</p>
-                <h3>0</h3>
+    <header class="navbar">
+        <div class="logo">
+            <div class="logo-box">
+                <i class="fas fa-bolt"></i>
             </div>
-
-            <div class="card">
-                <p>Active Routines</p>
-                <h3>0</h3>
-            </div>
-
-            <div class="card">
-                <p>Last Duration</p>
-                <h3>--</h3>
-            </div>
-        </div>
-    </div>
-
-    <div id="routines" class="page">
-        <h2>Routine Library</h2>
-        <p>Manage your workout routines</p>
-
-        <button onclick="toggleForm()">Create Routine</button>
-
-        <div id="routine-form" style="display: none; margin-top: 20px;">
-            <input type="text" id="routine-name" placeholder="Routine name">
-            <button onclick="addRoutine()">Save</button>
+            <span>Fitness Companion</span>
         </div>
 
-        <div id="routine-list"></div>
-    </div>
+        <div class="nav">
+            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+            <button class="nav-btn" onclick="showPage('routines')">Routines</button>
+            <button class="nav-btn" onclick="showPage('exercises')">Exercises</button>
+        </div>
+    </header>
 
-    <div id="exercises" class="page">
-        <h2>Exercise Database</h2>
-        <p>Browse different movements</p>
-    </div>
+    <main class="container">
+        <div id="dashboard" class="page active">
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Track your progress and start your next workout</p>
+
+            <div class="cards">
+                <div class="card">
+                    <p class="label">Total Workouts</p>
+                    <h3>0</h3>
+                </div>
+
+                <div class="card">
+                    <p class="label">Active Routines</p>
+                    <h3>0</h3>
+                </div>
+
+                <div class="card">
+                    <p class="label">Last Duration</p>
+                    <h3>--</h3>
+                </div>
+            </div>
+        </div>
+
+        <div id="routines" class="page">
+            <div class="top-row">
+                <div>
+                    <h1>Routine Library</h1>
+                    <p class="subtitle">Manage your workout routines</p>
+                </div>
+                <button class="green-btn" onclick="toggleForm()">Create Routine</button>
+            </div>
+
+            <div id="routine-form" class="form-box hidden">
+                <input type="text" id="routine-name" placeholder="Routine name">
+                <button class="green-btn" onclick="addRoutine()">Save</button>
+            </div>
+
+            <div id="routine-list"></div>
+        </div>
+
+        <div id="exercises" class="page">
+            <h1>Exercise Database</h1>
+            <p class="subtitle">Browse different movements</p>
+        </div>
+    </main>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
