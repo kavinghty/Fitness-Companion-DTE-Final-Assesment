@@ -139,7 +139,8 @@ input {
     display: none;
 }
 
-#routine-list .routine-item {
+#routine-list .routine-item,
+#history-list .history-item {
     background-color: #111317;
     border: 1px solid #1f2228;
     padding: 15px;

@@ -19,6 +19,7 @@
             <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
             <button class="nav-btn" onclick="showPage('routines')">Routines</button>
             <button class="nav-btn" onclick="showPage('exercises')">Exercises</button>
+            <button class="nav-btn" onclick="showPage('history')">History</button>
         </div>
     </header>
 
@@ -65,6 +66,12 @@
         <div id="exercises" class="page">
             <h1>Exercise Database</h1>
             <p class="subtitle">Browse different movements</p>
+        </div>
+
+        <div id="history" class="page">
+            <h1>Workout History</h1>
+            <p class="subtitle">See your past sessions</p>
+            <div id="history-list"></div>
         </div>
     </main>
 

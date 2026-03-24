@@ -12,9 +12,14 @@ function showPage(pageId) {
             button.classList.add("active");
         }
     });
+
+    if (pageId === "history") {
+        renderHistory();
+    }
 }
 
 let routines = [];
+let history = [];
 
 function toggleForm() {
     const form = document.getElementById("routine-form");
@@ -39,6 +44,19 @@ function renderRoutines() {
         list.innerHTML += `
             <div class="routine-item">
                 <p>${routine}</p>
+            </div>
+        `;
+    });
+}
+
+function renderHistory() {
+    const list = document.getElementById("history-list");
+    list.innerHTML = "";
+
+    history.forEach(item => {
+        list.innerHTML += `
+            <div class="history-item">
+                <p>${item}</p>
             </div>
         `;
     });
