@@ -13,17 +13,14 @@ function showPage(pageId) {
         }
     });
 
-    if (pageId === "history") {
-        renderHistory();
-    }
+    if (pageId === "history") renderHistory();
 }
 
 let routines = [];
 let history = [];
 
 function toggleForm() {
-    const form = document.getElementById("routine-form");
-    form.classList.toggle("hidden");
+    document.getElementById("routine-form").classList.toggle("hidden");
 }
 
 function addRoutine() {
@@ -36,14 +33,29 @@ function addRoutine() {
     document.getElementById("routine-name").value = "";
 }
 
+function deleteRoutine(index) {
+    routines.splice(index, 1);
+    renderRoutines();
+}
+
+function startRoutine(name) {
+    alert("Starting workout: " + name);
+}
+
 function renderRoutines() {
     const list = document.getElementById("routine-list");
     list.innerHTML = "";
 
     routines.forEach((routine, index) => {
         list.innerHTML += `
-            <div class="routine-item">
-                <p>${routine}</p>
+            <div class="routine-card">
+                <div>
+                    <h3>${routine}</h3>
+                </div>
+                <div class="button-group">
+                    <button class="green-btn" onclick="startRoutine('${routine}')">Start</button>
+                    <button class="dark-btn" onclick="deleteRoutine(${index})">Delete</button>
+                </div>
             </div>
         `;
     });

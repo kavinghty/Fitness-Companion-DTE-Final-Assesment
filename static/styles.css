@@ -63,6 +63,15 @@ body {
     cursor: pointer;
 }
 
+.dark-btn {
+    background-color: #1a1d23;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 .container {
     max-width: 1100px;
     margin: auto;
@@ -139,7 +148,22 @@ input {
     display: none;
 }
 
-#routine-list .routine-item,
+.routine-card {
+    background-color: #111317;
+    border: 1px solid #1f2228;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
 #history-list .history-item {
     background-color: #111317;
     border: 1px solid #1f2228;
