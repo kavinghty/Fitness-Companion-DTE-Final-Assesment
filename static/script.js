@@ -35,12 +35,18 @@ function toggleForm() {
 
 function addRoutine() {
     const name = document.getElementById("routine-name").value.trim();
+    const description = document.getElementById("routine-description").value.trim();
 
     if (name === "") return;
 
-    routines.push(name);
+    routines.push({
+        name: name,
+        description: description
+    });
+
     renderRoutines();
     document.getElementById("routine-name").value = "";
+    document.getElementById("routine-description").value = "";
 }
 
 function deleteRoutine(index) {
@@ -60,10 +66,11 @@ function renderRoutines() {
         list.innerHTML += `
             <div class="routine-card">
                 <div>
-                    <h3>${routine}</h3>
+                    <h3>${routine.name}</h3>
+                    <p class="small-text">${routine.description || "No description"}</p>
                 </div>
                 <div class="button-group">
-                    <button class="green-btn" onclick="startRoutine('${routine}')">Start</button>
+                    <button class="green-btn" onclick="startRoutine('${routine.name}')">Start</button>
                     <button class="dark-btn" onclick="deleteRoutine(${index})">Delete</button>
                 </div>
             </div>
@@ -79,7 +86,7 @@ function renderExercises() {
         list.innerHTML += `
             <div class="exercise-card">
                 <h3>${ex.name}</h3>
-                <p>${ex.category}</p>
+                <p class="small-text">${ex.category}</p>
             </div>
         `;
     });
