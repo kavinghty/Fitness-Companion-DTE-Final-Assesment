@@ -14,10 +14,20 @@ function showPage(pageId) {
     });
 
     if (pageId === "history") renderHistory();
+    if (pageId === "exercises") renderExercises();
 }
 
 let routines = [];
 let history = [];
+
+const exercises = [
+    { name: "Bench Press", category: "Chest" },
+    { name: "Squats", category: "Legs" },
+    { name: "Deadlift", category: "Back / Legs" },
+    { name: "Pull Ups", category: "Back" },
+    { name: "Shoulder Press", category: "Shoulders" },
+    { name: "Bicep Curls", category: "Arms" }
+];
 
 function toggleForm() {
     document.getElementById("routine-form").classList.toggle("hidden");
@@ -56,6 +66,20 @@ function renderRoutines() {
                     <button class="green-btn" onclick="startRoutine('${routine}')">Start</button>
                     <button class="dark-btn" onclick="deleteRoutine(${index})">Delete</button>
                 </div>
+            </div>
+        `;
+    });
+}
+
+function renderExercises() {
+    const list = document.getElementById("exercise-list");
+    list.innerHTML = "";
+
+    exercises.forEach(ex => {
+        list.innerHTML += `
+            <div class="exercise-card">
+                <h3>${ex.name}</h3>
+                <p>${ex.category}</p>
             </div>
         `;
     });

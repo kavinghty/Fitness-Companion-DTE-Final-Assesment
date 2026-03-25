@@ -164,6 +164,19 @@ input {
     gap: 10px;
 }
 
+.exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.exercise-card {
+    background-color: #111317;
+    border: 1px solid #1f2228;
+    padding: 20px;
+    border-radius: 12px;
+}
+
 #history-list .history-item {
     background-color: #111317;
     border: 1px solid #1f2228;
