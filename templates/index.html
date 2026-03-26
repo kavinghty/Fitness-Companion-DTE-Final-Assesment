@@ -7,90 +7,101 @@
 </head>
 <body>
 
-    <header class="navbar">
-        <div class="logo">
-            <div class="logo-box">
-                <i class="fas fa-bolt"></i>
-            </div>
-            <span>Fitness Companion</span>
+<header class="navbar">
+    <div class="logo">
+        <div class="logo-box">
+            <i class="fas fa-bolt"></i>
         </div>
+        <span>Fitness Companion</span>
+    </div>
 
-        <div class="nav">
-            <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
-            <button class="nav-btn" onclick="showPage('routines')">Routines</button>
-            <button class="nav-btn" onclick="showPage('exercises')">Exercises</button>
-            <button class="nav-btn" onclick="showPage('history')">History</button>
-        </div>
-    </header>
+    <div class="nav">
+        <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+        <button class="nav-btn" onclick="showPage('routines')">Routines</button>
+        <button class="nav-btn" onclick="showPage('exercises')">Exercises</button>
+        <button class="nav-btn" onclick="showPage('history')">History</button>
+    </div>
+</header>
 
-    <main class="container">
+<main class="container">
 
-        <div id="dashboard" class="page active">
-            <h1>Welcome Back</h1>
-            <p class="subtitle">Track your progress and start your next workout</p>
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="page active">
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Track your progress and start your next workout</p>
 
-            <div class="cards">
-                <div class="card">
-                    <p class="label">Total Workouts</p>
-                    <h3 id="total-workouts">0</h3>
-                </div>
-
-                <div class="card">
-                    <p class="label">Active Routines</p>
-                    <h3 id="total-routines">0</h3>
-                </div>
-
-                <div class="card">
-                    <p class="label">Last Duration</p>
-                    <h3 id="last-duration">--</h3>
-                </div>
+        <div class="cards">
+            <div class="card">
+                <p class="label">Total Workouts</p>
+                <h3 id="total-workouts">0</h3>
             </div>
-
-            <div class="card" id="last-session-box"></div>
 
             <div class="card">
-                <h3>Quick Start</h3>
-                <div id="quick-start-box"></div>
-                <button class="green-btn" onclick="showPage('routines')">View Routines</button>
+                <p class="label">Active Routines</p>
+                <h3 id="total-routines">0</h3>
+            </div>
+
+            <div class="card">
+                <p class="label">Last Duration</p>
+                <h3 id="last-duration">--</h3>
             </div>
         </div>
 
-        <div id="routines" class="page">
-            <div class="top-row">
-                <div>
-                    <h1>Routine Library</h1>
-                    <p class="subtitle">Manage your workout routines</p>
-                </div>
-                <button class="green-btn" onclick="toggleForm()">Create Routine</button>
+        <div class="card" id="last-session-box"></div>
+
+        <div class="card">
+            <h3>Quick Start</h3>
+            <div id="quick-start-box"></div>
+            <button class="green-btn" onclick="showPage('routines')">View Routines</button>
+        </div>
+    </div>
+
+    <!-- ROUTINES -->
+    <div id="routines" class="page">
+        <div class="top-row">
+            <div>
+                <h1>Routine Library</h1>
+                <p class="subtitle">Manage your workout routines</p>
             </div>
-
-            <div id="routine-form" class="form-box hidden">
-                <input type="text" id="routine-name" placeholder="Routine name">
-                <input type="text" id="routine-description" placeholder="Description">
-
-                <p class="label">Choose Exercises</p>
-                <div id="exercise-choice-list" class="exercise-choice-list"></div>
-
-                <button class="green-btn" onclick="addRoutine()">Save</button>
-            </div>
-
-            <div id="routine-list"></div>
+            <button class="green-btn" onclick="toggleForm()">Create Routine</button>
         </div>
 
-        <div id="exercises" class="page">
-            <h1>Exercise Database</h1>
-            <p class="subtitle">Browse different movements</p>
-            <div id="exercise-list" class="exercise-grid"></div>
+        <div id="routine-form" class="form-box hidden">
+            <input type="text" id="routine-name" placeholder="Routine name">
+            <input type="text" id="routine-description" placeholder="Description">
+
+            <p class="label">Choose Exercises</p>
+            <div id="exercise-choice-list" class="exercise-choice-list"></div>
+
+            <button class="green-btn" onclick="addRoutine()">Save</button>
         </div>
 
-        <div id="history" class="page">
-            <h1>Workout History</h1>
-            <p class="subtitle">See your past sessions</p>
-            <div id="history-list"></div>
-        </div>
+        <div id="routine-list"></div>
+    </div>
 
-    </main>
+    <!-- EXERCISES -->
+    <div id="exercises" class="page">
+        <h1>Exercise Database</h1>
+        <p class="subtitle">Browse different movements</p>
+        <div id="exercise-list" class="exercise-grid"></div>
+    </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!-- HISTORY -->
+    <div id="history" class="page">
+        <h1>Workout History</h1>
+        <p class="subtitle">See your past sessions</p>
+        <div id="history-list"></div>
+    </div>
+
+    <!-- WORKOUT PAGE -->
+    <div id="workout" class="page">
+        <h1 id="workout-title">Workout</h1>
+        <div id="workout-exercise-list"></div>
+        <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
+    </div>
+
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

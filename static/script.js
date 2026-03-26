@@ -21,6 +21,7 @@ function showPage(pageId) {
 let routines = [];
 let history = [];
 let selectedExercises = [];
+let currentWorkout = null;
 
 const exercises = [
     { id: 1, name: "Bench Press", category: "Chest" },
@@ -68,8 +69,8 @@ function addRoutine() {
     if (name === "" || selectedExercises.length === 0) return;
 
     routines.unshift({
-        name: name,
-        description: description,
+        name,
+        description,
         exercises: [...selectedExercises]
     });
 
@@ -88,7 +89,45 @@ function deleteRoutine(index) {
 }
 
 function startRoutine(name) {
-    alert("Starting workout: " + name);
+    const routine = routines.find(r => r.name === name);
+    if (!routine) return;
+
+    currentWorkout = {
+        name: routine.name,
+        exercises: routine.exercises.map(id => {
+            const ex = exercises.find(e => e.id === id);
+            return { name: ex.name };
+        })
+    };
+
+    renderWorkout();
+    showWorkoutPage();
+}
+
+function showWorkoutPage() {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+    document.getElementById("workout").classList.add("active");
+}
+
+function renderWorkout() {
+    document.getElementById("workout-title").textContent = currentWorkout.name;
+
+    const list = document.getElementById("workout-exercise-list");
+    list.innerHTML = "";
+
+    currentWorkout.exercises.forEach(ex => {
+        list.innerHTML += `
+            <div class="workout-card">
+                <h3>${ex.name}</h3>
+            </div>
+        `;
+    });
+}
+
+function cancelWorkout() {
+    currentWorkout = null;
+    showPage("dashboard");
 }
 
 function renderRoutines() {
@@ -115,35 +154,6 @@ function renderRoutines() {
 function renderDashboard() {
     document.getElementById("total-routines").textContent = routines.length;
     document.getElementById("total-workouts").textContent = history.length;
-
-    const lastBox = document.getElementById("last-session-box");
-
-    if (history.length > 0) {
-        const last = history[0];
-        lastBox.innerHTML = `
-            <p class="label green">Last Session</p>
-            <h3>${last}</h3>
-        `;
-        document.getElementById("last-duration").textContent = "45 min";
-    } else {
-        lastBox.innerHTML = `<p class="small-text">No workouts yet</p>`;
-    }
-
-    const quick = document.getElementById("quick-start-box");
-
-    if (routines.length > 0) {
-        quick.innerHTML = `
-            <div class="quick-box">
-                <div>
-                    <h3>${routines[0].name}</h3>
-                    <p class="small-text">${routines[0].exercises.length} exercises</p>
-                </div>
-                <button class="green-btn" onclick="startRoutine('${routines[0].name}')">Start</button>
-            </div>
-        `;
-    } else {
-        quick.innerHTML = `<p class="small-text">No routines available</p>`;
-    }
 }
 
 function renderExercises() {
@@ -163,14 +173,6 @@ function renderExercises() {
 function renderHistory() {
     const list = document.getElementById("history-list");
     list.innerHTML = "";
-
-    history.forEach(item => {
-        list.innerHTML += `
-            <div class="history-item">
-                <p>${item}</p>
-            </div>
-        `;
-    });
 }
 
 window.onload = function() {
