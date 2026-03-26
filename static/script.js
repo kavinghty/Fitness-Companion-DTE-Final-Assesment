@@ -19,34 +19,64 @@ function showPage(pageId) {
 
 let routines = [];
 let history = [];
+let selectedExercises = [];
 
 const exercises = [
-    { name: "Bench Press", category: "Chest" },
-    { name: "Squats", category: "Legs" },
-    { name: "Deadlift", category: "Back / Legs" },
-    { name: "Pull Ups", category: "Back" },
-    { name: "Shoulder Press", category: "Shoulders" },
-    { name: "Bicep Curls", category: "Arms" }
+    { id: 1, name: "Bench Press", category: "Chest" },
+    { id: 2, name: "Squats", category: "Legs" },
+    { id: 3, name: "Deadlift", category: "Back / Legs" },
+    { id: 4, name: "Pull Ups", category: "Back" },
+    { id: 5, name: "Shoulder Press", category: "Shoulders" },
+    { id: 6, name: "Bicep Curls", category: "Arms" }
 ];
 
 function toggleForm() {
     document.getElementById("routine-form").classList.toggle("hidden");
+    loadExerciseChoices();
+}
+
+function loadExerciseChoices() {
+    const list = document.getElementById("exercise-choice-list");
+    list.innerHTML = "";
+
+    exercises.forEach(ex => {
+        list.innerHTML += `
+            <button class="exercise-choice" id="ex-${ex.id}" onclick="selectExercise(${ex.id})">
+                ${ex.name}
+            </button>
+        `;
+    });
+}
+
+function selectExercise(id) {
+    const index = selectedExercises.indexOf(id);
+
+    if (index === -1) {
+        selectedExercises.push(id);
+        document.getElementById("ex-" + id).classList.add("selected");
+    } else {
+        selectedExercises.splice(index, 1);
+        document.getElementById("ex-" + id).classList.remove("selected");
+    }
 }
 
 function addRoutine() {
     const name = document.getElementById("routine-name").value.trim();
     const description = document.getElementById("routine-description").value.trim();
 
-    if (name === "") return;
+    if (name === "" || selectedExercises.length === 0) return;
 
     routines.push({
         name: name,
-        description: description
+        description: description,
+        exercises: [...selectedExercises]
     });
 
     renderRoutines();
+
     document.getElementById("routine-name").value = "";
     document.getElementById("routine-description").value = "";
+    selectedExercises = [];
 }
 
 function deleteRoutine(index) {
@@ -68,6 +98,7 @@ function renderRoutines() {
                 <div>
                     <h3>${routine.name}</h3>
                     <p class="small-text">${routine.description || "No description"}</p>
+                    <p class="small-text">${routine.exercises.length} exercises</p>
                 </div>
                 <div class="button-group">
                     <button class="green-btn" onclick="startRoutine('${routine.name}')">Start</button>

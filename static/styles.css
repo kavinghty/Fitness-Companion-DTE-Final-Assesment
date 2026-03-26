@@ -188,3 +188,23 @@ input {
     color: #6b7280;
     font-size: 14px;
 }
+.exercise-choice-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.exercise-choice {
+    background-color: #1a1d23;
+    color: white;
+    border: 1px solid #1f2228;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+.exercise-choice.selected {
+    background-color: #00ff88;
+    color: black;
+}
