@@ -32,18 +32,26 @@
             <div class="cards">
                 <div class="card">
                     <p class="label">Total Workouts</p>
-                    <h3>0</h3>
+                    <h3 id="total-workouts">0</h3>
                 </div>
 
                 <div class="card">
                     <p class="label">Active Routines</p>
-                    <h3>0</h3>
+                    <h3 id="total-routines">0</h3>
                 </div>
 
                 <div class="card">
                     <p class="label">Last Duration</p>
-                    <h3>--</h3>
+                    <h3 id="last-duration">--</h3>
                 </div>
+            </div>
+
+            <div class="card" id="last-session-box"></div>
+
+            <div class="card">
+                <h3>Quick Start</h3>
+                <div id="quick-start-box"></div>
+                <button class="green-btn" onclick="showPage('routines')">View Routines</button>
             </div>
         </div>
 

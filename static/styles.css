@@ -208,3 +208,18 @@ input {
     background-color: #00ff88;
     color: black;
 }
+.quick-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.green {
+    color: #00ff88;
+}
+
+.quote {
+    font-style: italic;
+    color: #6b7280;
+    margin-top: 10px;
+}

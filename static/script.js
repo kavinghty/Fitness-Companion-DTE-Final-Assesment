@@ -15,6 +15,7 @@ function showPage(pageId) {
 
     if (pageId === "history") renderHistory();
     if (pageId === "exercises") renderExercises();
+    if (pageId === "dashboard") renderDashboard();
 }
 
 let routines = [];
@@ -66,13 +67,14 @@ function addRoutine() {
 
     if (name === "" || selectedExercises.length === 0) return;
 
-    routines.push({
+    routines.unshift({
         name: name,
         description: description,
         exercises: [...selectedExercises]
     });
 
     renderRoutines();
+    renderDashboard();
 
     document.getElementById("routine-name").value = "";
     document.getElementById("routine-description").value = "";
@@ -82,6 +84,7 @@ function addRoutine() {
 function deleteRoutine(index) {
     routines.splice(index, 1);
     renderRoutines();
+    renderDashboard();
 }
 
 function startRoutine(name) {
@@ -107,6 +110,40 @@ function renderRoutines() {
             </div>
         `;
     });
+}
+
+function renderDashboard() {
+    document.getElementById("total-routines").textContent = routines.length;
+    document.getElementById("total-workouts").textContent = history.length;
+
+    const lastBox = document.getElementById("last-session-box");
+
+    if (history.length > 0) {
+        const last = history[0];
+        lastBox.innerHTML = `
+            <p class="label green">Last Session</p>
+            <h3>${last}</h3>
+        `;
+        document.getElementById("last-duration").textContent = "45 min";
+    } else {
+        lastBox.innerHTML = `<p class="small-text">No workouts yet</p>`;
+    }
+
+    const quick = document.getElementById("quick-start-box");
+
+    if (routines.length > 0) {
+        quick.innerHTML = `
+            <div class="quick-box">
+                <div>
+                    <h3>${routines[0].name}</h3>
+                    <p class="small-text">${routines[0].exercises.length} exercises</p>
+                </div>
+                <button class="green-btn" onclick="startRoutine('${routines[0].name}')">Start</button>
+            </div>
+        `;
+    } else {
+        quick.innerHTML = `<p class="small-text">No routines available</p>`;
+    }
 }
 
 function renderExercises() {
