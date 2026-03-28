@@ -14,7 +14,6 @@ function showPage(pageId) {
     });
 
     if (pageId === "dashboard") renderDashboard();
-    if (pageId === "exercises") renderExercises();
 }
 
 let routines = [];
@@ -22,13 +21,16 @@ let history = [];
 let selectedExercises = [];
 let currentWorkout = null;
 
+let timerInterval = null;
+let timeLeft = 0;
+
 const exercises = [
-    { id: 1, name: "Bench Press", category: "Chest" },
-    { id: 2, name: "Squats", category: "Legs" },
-    { id: 3, name: "Deadlift", category: "Back / Legs" },
-    { id: 4, name: "Pull Ups", category: "Back" },
-    { id: 5, name: "Shoulder Press", category: "Shoulders" },
-    { id: 6, name: "Bicep Curls", category: "Arms" }
+    { id: 1, name: "Bench Press" },
+    { id: 2, name: "Squats" },
+    { id: 3, name: "Deadlift" },
+    { id: 4, name: "Pull Ups" },
+    { id: 5, name: "Shoulder Press" },
+    { id: 6, name: "Bicep Curls" }
 ];
 
 function toggleForm() {
@@ -63,21 +65,16 @@ function selectExercise(id) {
 
 function addRoutine() {
     const name = document.getElementById("routine-name").value.trim();
-    const description = document.getElementById("routine-description").value.trim();
 
     if (name === "" || selectedExercises.length === 0) return;
 
     routines.unshift({
         name,
-        description,
         exercises: [...selectedExercises]
     });
 
     renderRoutines();
     renderDashboard();
-
-    document.getElementById("routine-name").value = "";
-    document.getElementById("routine-description").value = "";
     selectedExercises = [];
 }
 
@@ -90,9 +87,8 @@ function startRoutine(name) {
             const ex = exercises.find(e => e.id === id);
             return {
                 name: ex.name,
-                sets: [
-                    { weight: "", reps: "" }
-                ]
+                restTime: 60,
+                sets: [{ weight: "", reps: "" }]
             };
         })
     };
@@ -103,7 +99,6 @@ function startRoutine(name) {
 
 function showWorkoutPage() {
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
     document.getElementById("workout").classList.add("active");
 }
 
@@ -124,7 +119,7 @@ function renderWorkout() {
                         onchange="updateSet(${exIndex}, ${setIndex}, 'weight', this.value)">
                     <input type="number" placeholder="Reps" value="${set.reps}"
                         onchange="updateSet(${exIndex}, ${setIndex}, 'reps', this.value)">
-                    <button onclick="removeSet(${exIndex}, ${setIndex})">X</button>
+                    <button onclick="startRestTimer(${exIndex})">Rest</button>
                 </div>
             `;
         });
@@ -132,11 +127,44 @@ function renderWorkout() {
         list.innerHTML += `
             <div class="workout-card">
                 <h3>${exercise.name}</h3>
+
+                <div class="rest-box">
+                    <label>Rest Time (seconds)</label>
+                    <input type="number" value="${exercise.restTime}"
+                        onchange="changeRestTime(${exIndex}, this.value)">
+                </div>
+
                 ${setsHTML}
-                <button class="green-btn" onclick="addSet(${exIndex})">Add Set</button>
+                <button onclick="addSet(${exIndex})">Add Set</button>
             </div>
         `;
     });
+}
+
+function changeRestTime(exIndex, value) {
+    currentWorkout.exercises[exIndex].restTime = Number(value);
+}
+
+function startRestTimer(exIndex) {
+    clearInterval(timerInterval);
+
+    timeLeft = currentWorkout.exercises[exIndex].restTime;
+    updateTimer();
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+        }
+    }, 1000);
+}
+
+function updateTimer() {
+    const min = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+    const sec = String(timeLeft % 60).padStart(2, "0");
+    document.getElementById("timer-box").textContent = `Rest Timer: ${min}:${sec}`;
 }
 
 function updateSet(exIndex, setIndex, field, value) {
@@ -148,13 +176,9 @@ function addSet(exIndex) {
     renderWorkout();
 }
 
-function removeSet(exIndex, setIndex) {
-    currentWorkout.exercises[exIndex].sets.splice(setIndex, 1);
-    renderWorkout();
-}
-
 function cancelWorkout() {
     currentWorkout = null;
+    clearInterval(timerInterval);
     showPage("dashboard");
 }
 
@@ -162,16 +186,11 @@ function renderRoutines() {
     const list = document.getElementById("routine-list");
     list.innerHTML = "";
 
-    routines.forEach((routine, index) => {
+    routines.forEach(r => {
         list.innerHTML += `
             <div class="routine-card">
-                <div>
-                    <h3>${routine.name}</h3>
-                    <p>${routine.exercises.length} exercises</p>
-                </div>
-                <div>
-                    <button onclick="startRoutine('${routine.name}')">Start</button>
-                </div>
+                <h3>${r.name}</h3>
+                <button onclick="startRoutine('${r.name}')">Start</button>
             </div>
         `;
     });
@@ -179,10 +198,7 @@ function renderRoutines() {
 
 function renderDashboard() {
     document.getElementById("total-routines").textContent = routines.length;
-    document.getElementById("total-workouts").textContent = history.length;
 }
-
-function renderExercises() {}
 
 window.onload = function() {
     showPage("dashboard");
