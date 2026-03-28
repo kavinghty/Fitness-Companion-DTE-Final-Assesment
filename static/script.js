@@ -17,8 +17,9 @@ function showPage(pageId) {
     if (pageId === "history") renderHistory();
 }
 
-let routines = [];
-let history = [];
+let routines = JSON.parse(localStorage.getItem("routines")) || [];
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
 let selectedExercises = [];
 let currentWorkout = null;
 
@@ -33,6 +34,11 @@ const exercises = [
     { id: 5, name: "Shoulder Press" },
     { id: 6, name: "Bicep Curls" }
 ];
+
+function saveData() {
+    localStorage.setItem("routines", JSON.stringify(routines));
+    localStorage.setItem("history", JSON.stringify(history));
+}
 
 function toggleForm() {
     document.getElementById("routine-form").classList.toggle("hidden");
@@ -73,6 +79,8 @@ function addRoutine() {
         name,
         exercises: [...selectedExercises]
     });
+
+    saveData();
 
     renderRoutines();
     renderDashboard();
@@ -151,6 +159,8 @@ function finishWorkout() {
         date: new Date().toLocaleDateString(),
         duration: duration
     });
+
+    saveData();
 
     currentWorkout = null;
     clearInterval(timerInterval);
@@ -234,5 +244,8 @@ function renderDashboard() {
 }
 
 window.onload = function() {
+    renderRoutines();
+    renderDashboard();
+    renderHistory();
     showPage("dashboard");
 }
