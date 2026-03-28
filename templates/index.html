@@ -25,6 +25,7 @@
 
 <main class="container">
 
+    <!-- DASHBOARD -->
     <div id="dashboard" class="page active">
         <h1>Welcome Back</h1>
         <p class="subtitle">Track your progress and start your next workout</p>
@@ -55,6 +56,7 @@
         </div>
     </div>
 
+    <!-- ROUTINES -->
     <div id="routines" class="page">
         <div class="top-row">
             <div>
@@ -77,27 +79,29 @@
         <div id="routine-list"></div>
     </div>
 
+    <!-- EXERCISES -->
     <div id="exercises" class="page">
         <h1>Exercise Database</h1>
         <p class="subtitle">Browse different movements</p>
         <div id="exercise-list" class="exercise-grid"></div>
     </div>
 
+    <!-- HISTORY -->
     <div id="history" class="page">
         <h1>Workout History</h1>
         <p class="subtitle">See your past sessions</p>
         <div id="history-list"></div>
     </div>
 
-    <!-- UPDATED WORKOUT PAGE -->
+    <!-- WORKOUT -->
     <div id="workout" class="page">
         <h1 id="workout-title">Workout</h1>
 
-        <!-- TIMER DISPLAY -->
         <div id="timer-box" class="timer-box">Rest Timer: 00:00</div>
 
         <div id="workout-exercise-list"></div>
 
+        <button class="green-btn" onclick="finishWorkout()">Finish Workout</button>
         <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
     </div>
 

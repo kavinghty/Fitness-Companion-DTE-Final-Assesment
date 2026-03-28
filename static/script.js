@@ -14,6 +14,7 @@ function showPage(pageId) {
     });
 
     if (pageId === "dashboard") renderDashboard();
+    if (pageId === "history") renderHistory();
 }
 
 let routines = [];
@@ -83,6 +84,7 @@ function startRoutine(name) {
 
     currentWorkout = {
         name: routine.name,
+        startTime: Date.now(),
         exercises: routine.exercises.map(id => {
             const ex = exercises.find(e => e.id === id);
             return {
@@ -115,9 +117,9 @@ function renderWorkout() {
             setsHTML += `
                 <div class="set-row">
                     <div>Set ${setIndex + 1}</div>
-                    <input type="number" placeholder="Weight" value="${set.weight}"
+                    <input type="number" placeholder="Weight"
                         onchange="updateSet(${exIndex}, ${setIndex}, 'weight', this.value)">
-                    <input type="number" placeholder="Reps" value="${set.reps}"
+                    <input type="number" placeholder="Reps"
                         onchange="updateSet(${exIndex}, ${setIndex}, 'reps', this.value)">
                     <button onclick="startRestTimer(${exIndex})">Rest</button>
                 </div>
@@ -141,6 +143,38 @@ function renderWorkout() {
     });
 }
 
+function finishWorkout() {
+    const duration = Math.max(1, Math.floor((Date.now() - currentWorkout.startTime) / 60000));
+
+    history.unshift({
+        name: currentWorkout.name,
+        date: new Date().toLocaleDateString(),
+        duration: duration
+    });
+
+    currentWorkout = null;
+    clearInterval(timerInterval);
+
+    renderDashboard();
+    renderHistory();
+    showPage("dashboard");
+}
+
+function renderHistory() {
+    const list = document.getElementById("history-list");
+    list.innerHTML = "";
+
+    history.forEach(item => {
+        list.innerHTML += `
+            <div class="history-item">
+                <h3>${item.name}</h3>
+                <p>${item.date}</p>
+                <p>${item.duration} min</p>
+            </div>
+        `;
+    });
+}
+
 function changeRestTime(exIndex, value) {
     currentWorkout.exercises[exIndex].restTime = Number(value);
 }
@@ -155,9 +189,7 @@ function startRestTimer(exIndex) {
         timeLeft--;
         updateTimer();
 
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-        }
+        if (timeLeft <= 0) clearInterval(timerInterval);
     }, 1000);
 }
 
@@ -198,6 +230,7 @@ function renderRoutines() {
 
 function renderDashboard() {
     document.getElementById("total-routines").textContent = routines.length;
+    document.getElementById("total-workouts").textContent = history.length;
 }
 
 window.onload = function() {
