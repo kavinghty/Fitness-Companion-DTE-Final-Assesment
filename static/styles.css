@@ -230,3 +230,22 @@ input {
     border-radius: 10px;
     margin-bottom: 10px;
 }
+.set-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 1fr auto;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.set-row input {
+    margin-bottom: 0;
+}
+
+.workout-card {
+    background-color: #111317;
+    border: 1px solid #1f2228;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}

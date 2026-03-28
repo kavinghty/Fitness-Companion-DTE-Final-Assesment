@@ -13,9 +13,8 @@ function showPage(pageId) {
         }
     });
 
-    if (pageId === "history") renderHistory();
-    if (pageId === "exercises") renderExercises();
     if (pageId === "dashboard") renderDashboard();
+    if (pageId === "exercises") renderExercises();
 }
 
 let routines = [];
@@ -82,21 +81,19 @@ function addRoutine() {
     selectedExercises = [];
 }
 
-function deleteRoutine(index) {
-    routines.splice(index, 1);
-    renderRoutines();
-    renderDashboard();
-}
-
 function startRoutine(name) {
     const routine = routines.find(r => r.name === name);
-    if (!routine) return;
 
     currentWorkout = {
         name: routine.name,
         exercises: routine.exercises.map(id => {
             const ex = exercises.find(e => e.id === id);
-            return { name: ex.name };
+            return {
+                name: ex.name,
+                sets: [
+                    { weight: "", reps: "" }
+                ]
+            };
         })
     };
 
@@ -116,13 +113,44 @@ function renderWorkout() {
     const list = document.getElementById("workout-exercise-list");
     list.innerHTML = "";
 
-    currentWorkout.exercises.forEach(ex => {
+    currentWorkout.exercises.forEach((exercise, exIndex) => {
+        let setsHTML = "";
+
+        exercise.sets.forEach((set, setIndex) => {
+            setsHTML += `
+                <div class="set-row">
+                    <div>Set ${setIndex + 1}</div>
+                    <input type="number" placeholder="Weight" value="${set.weight}"
+                        onchange="updateSet(${exIndex}, ${setIndex}, 'weight', this.value)">
+                    <input type="number" placeholder="Reps" value="${set.reps}"
+                        onchange="updateSet(${exIndex}, ${setIndex}, 'reps', this.value)">
+                    <button onclick="removeSet(${exIndex}, ${setIndex})">X</button>
+                </div>
+            `;
+        });
+
         list.innerHTML += `
             <div class="workout-card">
-                <h3>${ex.name}</h3>
+                <h3>${exercise.name}</h3>
+                ${setsHTML}
+                <button class="green-btn" onclick="addSet(${exIndex})">Add Set</button>
             </div>
         `;
     });
+}
+
+function updateSet(exIndex, setIndex, field, value) {
+    currentWorkout.exercises[exIndex].sets[setIndex][field] = value;
+}
+
+function addSet(exIndex) {
+    currentWorkout.exercises[exIndex].sets.push({ weight: "", reps: "" });
+    renderWorkout();
+}
+
+function removeSet(exIndex, setIndex) {
+    currentWorkout.exercises[exIndex].sets.splice(setIndex, 1);
+    renderWorkout();
 }
 
 function cancelWorkout() {
@@ -139,12 +167,10 @@ function renderRoutines() {
             <div class="routine-card">
                 <div>
                     <h3>${routine.name}</h3>
-                    <p class="small-text">${routine.description || "No description"}</p>
-                    <p class="small-text">${routine.exercises.length} exercises</p>
+                    <p>${routine.exercises.length} exercises</p>
                 </div>
-                <div class="button-group">
-                    <button class="green-btn" onclick="startRoutine('${routine.name}')">Start</button>
-                    <button class="dark-btn" onclick="deleteRoutine(${index})">Delete</button>
+                <div>
+                    <button onclick="startRoutine('${routine.name}')">Start</button>
                 </div>
             </div>
         `;
@@ -156,24 +182,7 @@ function renderDashboard() {
     document.getElementById("total-workouts").textContent = history.length;
 }
 
-function renderExercises() {
-    const list = document.getElementById("exercise-list");
-    list.innerHTML = "";
-
-    exercises.forEach(ex => {
-        list.innerHTML += `
-            <div class="exercise-card">
-                <h3>${ex.name}</h3>
-                <p class="small-text">${ex.category}</p>
-            </div>
-        `;
-    });
-}
-
-function renderHistory() {
-    const list = document.getElementById("history-list");
-    list.innerHTML = "";
-}
+function renderExercises() {}
 
 window.onload = function() {
     showPage("dashboard");
