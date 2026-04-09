@@ -95,12 +95,19 @@ function addRoutine() {
 
     saveData();
 
-    // reset form
     document.getElementById("routine-name").value = "";
     document.getElementById("routine-description").value = "";
     selectedExercises = [];
     loadExerciseChoices();
 
+    renderRoutines();
+    renderDashboard();
+}
+
+/* ---------------- DELETE ROUTINE (NEW) ---------------- */
+function deleteRoutine(name) {
+    routines = routines.filter(r => r.name !== name);
+    saveData();
     renderRoutines();
     renderDashboard();
 }
@@ -125,6 +132,7 @@ function renderRoutines() {
                 </div>
                 <div class="button-group">
                     <button class="green-btn" onclick="startRoutine('${r.name}')">Start</button>
+                    <button class="dark-btn" onclick="deleteRoutine('${r.name}')">Delete</button>
                 </div>
             </div>
         `;
