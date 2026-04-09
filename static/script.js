@@ -15,7 +15,7 @@ function showPage(pageId) {
 
     if (pageId === "dashboard") renderDashboard();
     if (pageId === "history") renderHistory();
-    if (pageId === "exercises") renderExercises(); // ✅ FIX
+    if (pageId === "exercises") renderExercises();
 }
 
 let routines = JSON.parse(localStorage.getItem("routines")) || [];
@@ -91,7 +91,12 @@ function addRoutine() {
     document.getElementById("routine-form").classList.add("hidden");
 }
 
+/* ✅ UPDATED DELETE (with confirmation) */
 function deleteRoutine(name) {
+    const confirmDelete = confirm(`Delete "${name}"?`);
+
+    if (!confirmDelete) return;
+
     routines = routines.filter(r => r.name !== name);
     saveData();
     renderRoutines();
@@ -156,7 +161,7 @@ function renderWorkout() {
                 </div>
 
                 ${setsHTML}
-                <button onclick="addSet(${exIndex})">Add Set</button>
+                <button class="green-btn" onclick="addSet(${exIndex})">Add Set</button>
             </div>
         `;
     });
@@ -280,6 +285,6 @@ window.onload = function() {
     renderRoutines();
     renderDashboard();
     renderHistory();
-    renderExercises(); // ✅ IMPORTANT
+    renderExercises();
     showPage("dashboard");
 };
