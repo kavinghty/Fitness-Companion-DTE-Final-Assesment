@@ -71,13 +71,16 @@ function selectExercise(id) {
     }
 }
 
+/* ✅ UPDATED: now saves description */
 function addRoutine() {
     const name = document.getElementById("routine-name").value.trim();
+    const description = document.getElementById("routine-description").value.trim();
 
     if (name === "" || selectedExercises.length === 0) return;
 
     routines.unshift({
         name,
+        description,
         exercises: [...selectedExercises]
     });
 
@@ -88,13 +91,12 @@ function addRoutine() {
 
     selectedExercises = [];
     document.getElementById("routine-name").value = "";
+    document.getElementById("routine-description").value = "";
     document.getElementById("routine-form").classList.add("hidden");
 }
 
-/* ✅ UPDATED DELETE (with confirmation) */
 function deleteRoutine(name) {
     const confirmDelete = confirm(`Delete "${name}"?`);
-
     if (!confirmDelete) return;
 
     routines = routines.filter(r => r.name !== name);
@@ -226,6 +228,7 @@ function cancelWorkout() {
     showPage("dashboard");
 }
 
+/* ✅ UPDATED: show description */
 function renderRoutines() {
     const list = document.getElementById("routine-list");
     list.innerHTML = "";
@@ -235,6 +238,7 @@ function renderRoutines() {
             <div class="routine-card">
                 <div>
                     <h3>${r.name}</h3>
+                    <p class="small-text">${r.description || "No description"}</p>
                     <p class="small-text">${r.exercises.length} exercises</p>
                 </div>
 
