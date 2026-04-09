@@ -91,8 +91,8 @@ function addRoutine() {
     document.getElementById("routine-form").classList.add("hidden");
 }
 
-function deleteRoutine(index) {
-    routines.splice(index, 1);
+function deleteRoutine(name) {
+    routines = routines.filter(r => r.name !== name);
     saveData();
     renderRoutines();
     renderDashboard();
@@ -156,7 +156,7 @@ function renderWorkout() {
                 </div>
 
                 ${setsHTML}
-                <button class="green-btn" onclick="addSet(${exIndex})">Add Set</button>
+                <button onclick="addSet(${exIndex})">Add Set</button>
             </div>
         `;
     });
@@ -170,6 +170,7 @@ function startRestTimer(exIndex) {
     clearInterval(timerInterval);
 
     timeLeft = currentWorkout.exercises[exIndex].restTime;
+
     updateTimer();
 
     timerInterval = setInterval(() => {
@@ -195,19 +196,13 @@ function addSet(exIndex) {
     renderWorkout();
 }
 
-function cancelWorkout() {
-    currentWorkout = null;
-    clearInterval(timerInterval);
-    showPage("dashboard");
-}
-
 function finishWorkout() {
     const duration = Math.max(1, Math.floor((Date.now() - currentWorkout.startTime) / 60000));
 
     history.unshift({
         name: currentWorkout.name,
         date: new Date().toLocaleDateString(),
-        duration: duration
+        duration
     });
 
     saveData();
@@ -220,11 +215,17 @@ function finishWorkout() {
     showPage("dashboard");
 }
 
+function cancelWorkout() {
+    currentWorkout = null;
+    clearInterval(timerInterval);
+    showPage("dashboard");
+}
+
 function renderRoutines() {
     const list = document.getElementById("routine-list");
     list.innerHTML = "";
 
-    routines.forEach((r, index) => {
+    routines.forEach(r => {
         list.innerHTML += `
             <div class="routine-card">
                 <div>
@@ -234,8 +235,22 @@ function renderRoutines() {
 
                 <div class="button-group">
                     <button class="green-btn" onclick="startRoutine('${r.name}')">Start</button>
-                    <button class="dark-btn" onclick="deleteRoutine(${index})">Delete</button>
+                    <button class="dark-btn" onclick="deleteRoutine('${r.name}')">Delete</button>
                 </div>
+            </div>
+        `;
+    });
+}
+
+function renderExercises() {
+    const list = document.getElementById("exercise-list");
+    list.innerHTML = "";
+
+    exercises.forEach(ex => {
+        list.innerHTML += `
+            <div class="exercise-card">
+                <h3>${ex.name}</h3>
+                <p class="small-text">Strength exercise</p>
             </div>
         `;
     });
@@ -261,25 +276,10 @@ function renderDashboard() {
     document.getElementById("total-workouts").textContent = history.length;
 }
 
-/* ✅ NEW: EXERCISE DATABASE */
-function renderExercises() {
-    const list = document.getElementById("exercise-list");
-    list.innerHTML = "";
-
-    exercises.forEach(ex => {
-        list.innerHTML += `
-            <div class="exercise-card">
-                <h3>${ex.name}</h3>
-                <p class="small-text">Strength Exercise</p>
-            </div>
-        `;
-    });
-}
-
 window.onload = function() {
     renderRoutines();
     renderDashboard();
     renderHistory();
-    renderExercises(); // ✅ FIX
+    renderExercises(); // ✅ IMPORTANT
     showPage("dashboard");
-}
+};
