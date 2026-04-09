@@ -15,6 +15,7 @@ function showPage(pageId) {
 
     if (pageId === "dashboard") renderDashboard();
     if (pageId === "history") renderHistory();
+    if (pageId === "exercises") renderExercises(); // ✅ FIX
 }
 
 let routines = JSON.parse(localStorage.getItem("routines")) || [];
@@ -260,9 +261,25 @@ function renderDashboard() {
     document.getElementById("total-workouts").textContent = history.length;
 }
 
+/* ✅ NEW: EXERCISE DATABASE */
+function renderExercises() {
+    const list = document.getElementById("exercise-list");
+    list.innerHTML = "";
+
+    exercises.forEach(ex => {
+        list.innerHTML += `
+            <div class="exercise-card">
+                <h3>${ex.name}</h3>
+                <p class="small-text">Strength Exercise</p>
+            </div>
+        `;
+    });
+}
+
 window.onload = function() {
     renderRoutines();
     renderDashboard();
     renderHistory();
+    renderExercises(); // ✅ FIX
     showPage("dashboard");
 }
