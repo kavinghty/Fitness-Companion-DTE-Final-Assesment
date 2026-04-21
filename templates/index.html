@@ -27,7 +27,7 @@
 
     <!-- DASHBOARD -->
     <div id="dashboard" class="page active">
-        <h1>Welcome Back</h1>
+        <h1>Welcome Back, <span class="green" id="user-name">User</span></h1>
         <p class="subtitle">Track your progress and start your next workout</p>
 
         <div class="cards">
@@ -47,12 +47,19 @@
             </div>
         </div>
 
-        <div class="card" id="last-session-box"></div>
+        <!-- ✅ LAST SESSION -->
+        <div id="last-session-box" class="card"></div>
 
-        <div class="card">
+        <!-- ✅ QUICK START (IMPROVED) -->
+        <div class="card quick-start">
             <h3>Quick Start</h3>
+            <p class="small-text">Start your latest routine instantly</p>
+
             <div id="quick-start-box"></div>
-            <button class="green-btn" onclick="showPage('routines')">View Routines</button>
+
+            <button class="green-btn" onclick="showPage('routines')">
+                View All Routines
+            </button>
         </div>
     </div>
 
@@ -95,14 +102,21 @@
 
     <!-- WORKOUT -->
     <div id="workout" class="page">
-        <h1 id="workout-title">Workout</h1>
+        <div class="top-row">
+            <div>
+                <p class="label green">Active Workout</p>
+                <h1 id="workout-title">Workout</h1>
+            </div>
+        </div>
 
         <div id="timer-box" class="timer-box">Rest Timer: 00:00</div>
 
         <div id="workout-exercise-list"></div>
 
-        <button class="green-btn" onclick="finishWorkout()">Finish Workout</button>
-        <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
+        <div class="button-group">
+            <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
+            <button class="green-btn" onclick="finishWorkout()">Finish Workout</button>
+        </div>
     </div>
 
 </main>

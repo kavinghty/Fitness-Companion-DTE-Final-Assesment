@@ -71,7 +71,6 @@ function selectExercise(id) {
     }
 }
 
-/* ✅ UPDATED: now saves description */
 function addRoutine() {
     const name = document.getElementById("routine-name").value.trim();
     const description = document.getElementById("routine-description").value.trim();
@@ -228,7 +227,6 @@ function cancelWorkout() {
     showPage("dashboard");
 }
 
-/* ✅ UPDATED: show description */
 function renderRoutines() {
     const list = document.getElementById("routine-list");
     list.innerHTML = "";
@@ -280,9 +278,46 @@ function renderHistory() {
     });
 }
 
+/* ✅ UPDATED DASHBOARD WITH LAST SESSION + QUICK START */
 function renderDashboard() {
     document.getElementById("total-routines").textContent = routines.length;
     document.getElementById("total-workouts").textContent = history.length;
+
+    const quickBox = document.getElementById("quick-start-box");
+    const lastBox = document.getElementById("last-session-box");
+
+    /* Quick Start */
+    if (quickBox) {
+        if (routines.length === 0) {
+            quickBox.innerHTML = `<p class="small-text">No routines yet</p>`;
+        } else {
+            const r = routines[0];
+            quickBox.innerHTML = `
+                <div class="quick-box">
+                    <div>
+                        <h3>${r.name}</h3>
+                        <p class="small-text">${r.exercises.length} exercises</p>
+                    </div>
+                    <button class="green-btn" onclick="startRoutine('${r.name}')">Start</button>
+                </div>
+            `;
+        }
+    }
+
+    /* ✅ NEW: Last Session */
+    if (lastBox) {
+        if (history.length === 0) {
+            lastBox.innerHTML = `<p class="small-text">No workouts yet</p>`;
+        } else {
+            const last = history[0];
+            lastBox.innerHTML = `
+                <p class="label green">Last Session</p>
+                <h3>${last.name}</h3>
+                <p class="small-text">${last.date}</p>
+                <h2 class="green">${last.duration} min</h2>
+            `;
+        }
+    }
 }
 
 window.onload = function() {
