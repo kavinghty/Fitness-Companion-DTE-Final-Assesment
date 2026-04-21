@@ -5,10 +5,11 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* NAVBAR */
 .navbar {
     background-color: #111317;
     border-bottom: 1px solid #1f2228;
-    padding: 18px 28px;
+    padding: 16px 26px; /* slightly tighter */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,14 +18,14 @@ body {
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 20px;
+    gap: 10px;
+    font-size: 18px;
     font-weight: bold;
 }
 
 .logo-box {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
     background-color: #00ff88;
     color: black;
     border-radius: 8px;
@@ -33,16 +34,17 @@ body {
     align-items: center;
 }
 
+/* NAV */
 .nav {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .nav-btn {
     background: transparent;
     border: none;
     color: #94a3b8;
-    padding: 10px 16px;
+    padding: 8px 14px; /* tighter */
     border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
@@ -53,11 +55,12 @@ body {
     color: black;
 }
 
+/* BUTTONS */
 .green-btn {
     background-color: #00ff88;
     color: black;
     border: none;
-    padding: 10px 16px;
+    padding: 9px 14px;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
@@ -67,17 +70,19 @@ body {
     background-color: #1a1d23;
     color: white;
     border: none;
-    padding: 10px 16px;
+    padding: 9px 14px;
     border-radius: 8px;
     cursor: pointer;
 }
 
+/* CONTAINER */
 .container {
-    max-width: 1100px;
+    max-width: 1000px; /* 👈 tighter like image 2 */
     margin: auto;
-    padding: 35px 20px;
+    padding: 25px 18px; /* less vertical padding */
 }
 
+/* PAGE SWITCH */
 .page {
     display: none;
 }
@@ -86,59 +91,65 @@ body {
     display: block;
 }
 
+/* TEXT */
 h1 {
-    font-size: 38px;
-    margin-bottom: 8px;
+    font-size: 32px; /* smaller = cleaner */
+    margin-bottom: 6px;
 }
 
 .subtitle {
     color: #6b7280;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
-/* ✅ FIXED: Grid instead of flex (removes weird spacing) */
+/* DASHBOARD CARDS */
 .cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 20px;
+    gap: 15px; /* 👈 tighter spacing */
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 .card {
     background-color: #111317;
     border: 1px solid #1f2228;
-    padding: 20px;
+    padding: 16px; /* 👈 less padding = smaller cards */
     border-radius: 12px;
+    margin-bottom: 12px; /* 👈 reduces big vertical gaps */
 }
 
+/* LABELS */
 .label {
     color: #4b5563;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     text-transform: uppercase;
 }
 
+/* TOP ROW */
 .top-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 15px;
 }
 
+/* FORM */
 .form-box {
     background-color: #111317;
     border: 1px solid #1f2228;
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 input {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 9px;
+    margin-bottom: 8px;
     border-radius: 8px;
     border: none;
     background-color: #1a1d23;
@@ -149,12 +160,13 @@ input {
     display: none;
 }
 
+/* ROUTINES */
 .routine-card {
     background-color: #111317;
     border: 1px solid #1f2228;
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
-    margin-top: 10px;
+    margin-top: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -162,32 +174,35 @@ input {
 
 .button-group {
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
+/* EXERCISES */
 .exercise-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 12px;
 }
 
 .exercise-card {
     background-color: #111317;
     border: 1px solid #1f2228;
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
 }
 
+/* TEXT SMALL */
 .small-text {
     color: #6b7280;
-    font-size: 14px;
+    font-size: 13px;
 }
 
+/* EXERCISE SELECT */
 .exercise-choice-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 8px;
+    margin-bottom: 12px;
 }
 
 .exercise-choice {
@@ -195,7 +210,7 @@ input {
     color: white;
     border: 1px solid #1f2228;
     border-radius: 8px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     cursor: pointer;
 }
 
@@ -204,12 +219,14 @@ input {
     color: black;
 }
 
+/* QUICK BOX */
 .quick-box {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* COLORS */
 .green {
     color: #00ff88;
 }
@@ -217,22 +234,23 @@ input {
 .quote {
     font-style: italic;
     color: #6b7280;
-    margin-top: 10px;
+    margin-top: 8px;
 }
 
+/* WORKOUT */
 .workout-card {
     background-color: #111317;
     border: 1px solid #1f2228;
-    padding: 15px;
+    padding: 14px;
     border-radius: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .set-row {
     display: grid;
     grid-template-columns: 60px 1fr 1fr auto;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 8px;
+    margin-top: 8px;
     align-items: center;
 }
 
@@ -240,30 +258,33 @@ input {
     margin-bottom: 0;
 }
 
+/* TIMER */
 .timer-box {
     background-color: #00ff88;
     color: black;
-    padding: 12px 18px;
+    padding: 10px 16px;
     border-radius: 10px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     display: inline-block;
 }
 
+/* REST */
 .rest-box {
-    margin-top: 10px;
-    max-width: 250px;
+    margin-top: 8px;
+    max-width: 220px;
 }
 
 .rest-box label {
-    font-size: 12px;
+    font-size: 11px;
     color: #6b7280;
 }
 
+/* HISTORY */
 .history-item {
     background-color: #111317;
     border: 1px solid #1f2228;
-    padding: 15px;
+    padding: 14px;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
