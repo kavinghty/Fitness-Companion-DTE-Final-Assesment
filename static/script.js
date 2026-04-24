@@ -1,3 +1,14 @@
+let routines = [];
+let history = JSON.parse(localStorage.getItem("history")) || [];
+
+let selectedExercises = [];
+let currentWorkout = null;
+
+let timerInterval = null;
+let timeLeft = 0;
+
+let exercises = [];
+
 function showPage(pageId) {
     const pages = document.querySelectorAll(".page");
     const buttons = document.querySelectorAll(".nav-btn");
@@ -16,29 +27,71 @@ function showPage(pageId) {
     if (pageId === "dashboard") renderDashboard();
     if (pageId === "history") renderHistory();
     if (pageId === "exercises") renderExercises();
+    if (pageId === "routines") loadRoutines();
 }
 
-let routines = JSON.parse(localStorage.getItem("routines")) || [];
-let history = JSON.parse(localStorage.getItem("history")) || [];
+async function loadExercisesFromDB() {
+    const res = await fetch("/api/exercises");
+    const data = await res.json();
 
-let selectedExercises = [];
-let currentWorkout = null;
+    exercises = data.map(e => ({
+        id: e.Exercise_ID,
+        name: e.Name
+    }));
 
-let timerInterval = null;
-let timeLeft = 0;
+    renderExercises();
+}
 
-const exercises = [
-    { id: 1, name: "Bench Press" },
-    { id: 2, name: "Squats" },
-    { id: 3, name: "Deadlift" },
-    { id: 4, name: "Pull Ups" },
-    { id: 5, name: "Shoulder Press" },
-    { id: 6, name: "Bicep Curls" }
-];
+async function loadRoutines() {
+    const res = await fetch("/api/routines");
+    const data = await res.json();
 
-function saveData() {
-    localStorage.setItem("routines", JSON.stringify(routines));
-    localStorage.setItem("history", JSON.stringify(history));
+    routines = data.map(r => ({
+        id: r.ROUTINE_ID,
+        name: r.ROUTINE_NAME,
+        description: r.DESCRIPTION || "",
+        exercises: []
+    }));
+
+    renderRoutines();
+    renderDashboard();
+}
+
+async function addRoutine() {
+    const name = document.getElementById("routine-name").value.trim();
+    const description = document.getElementById("routine-description").value.trim();
+
+    if (name === "" || selectedExercises.length === 0) return;
+
+    await fetch("/api/add_routine", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name,
+            description
+        })
+    });
+
+    selectedExercises = [];
+
+    document.getElementById("routine-name").value = "";
+    document.getElementById("routine-description").value = "";
+    document.getElementById("routine-form").classList.add("hidden");
+
+    loadRoutines();
+}
+
+async function deleteRoutine(id) {
+    const confirmDelete = confirm("Delete this routine?");
+    if (!confirmDelete) return;
+
+    await fetch(`/api/delete_routine/${id}`, {
+        method: "DELETE"
+    });
+
+    loadRoutines();
 }
 
 function toggleForm() {
@@ -71,37 +124,25 @@ function selectExercise(id) {
     }
 }
 
-function addRoutine() {
-    const name = document.getElementById("routine-name").value.trim();
-    const description = document.getElementById("routine-description").value.trim();
+function renderRoutines() {
+    const list = document.getElementById("routine-list");
+    list.innerHTML = "";
 
-    if (name === "" || selectedExercises.length === 0) return;
+    routines.forEach(r => {
+        list.innerHTML += `
+            <div class="routine-card">
+                <div>
+                    <h3>${r.name}</h3>
+                    <p class="small-text">${r.description || "No description"}</p>
+                </div>
 
-    routines.unshift({
-        name,
-        description,
-        exercises: [...selectedExercises]
+                <div class="button-group">
+                    <button class="green-btn" onclick="startRoutine('${r.name}')">Start</button>
+                    <button class="dark-btn" onclick="deleteRoutine(${r.id})">Delete</button>
+                </div>
+            </div>
+        `;
     });
-
-    saveData();
-
-    renderRoutines();
-    renderDashboard();
-
-    selectedExercises = [];
-    document.getElementById("routine-name").value = "";
-    document.getElementById("routine-description").value = "";
-    document.getElementById("routine-form").classList.add("hidden");
-}
-
-function deleteRoutine(name) {
-    const confirmDelete = confirm(`Delete "${name}"?`);
-    if (!confirmDelete) return;
-
-    routines = routines.filter(r => r.name !== name);
-    saveData();
-    renderRoutines();
-    renderDashboard();
 }
 
 function startRoutine(name) {
@@ -142,10 +183,8 @@ function renderWorkout() {
             setsHTML += `
                 <div class="set-row">
                     <div>Set ${setIndex + 1}</div>
-                    <input type="number" placeholder="Weight"
-                        onchange="updateSet(${exIndex}, ${setIndex}, 'weight', this.value)">
-                    <input type="number" placeholder="Reps"
-                        onchange="updateSet(${exIndex}, ${setIndex}, 'reps', this.value)">
+                    <input type="number" onchange="updateSet(${exIndex}, ${setIndex}, 'weight', this.value)">
+                    <input type="number" onchange="updateSet(${exIndex}, ${setIndex}, 'reps', this.value)">
                     <button onclick="startRestTimer(${exIndex})">Rest</button>
                 </div>
             `;
@@ -154,13 +193,10 @@ function renderWorkout() {
         list.innerHTML += `
             <div class="workout-card">
                 <h3>${exercise.name}</h3>
-
                 <div class="rest-box">
-                    <label>Rest Time (seconds)</label>
-                    <input type="number" value="${exercise.restTime}"
-                        onchange="changeRestTime(${exIndex}, this.value)">
+                    <label>Rest Time</label>
+                    <input type="number" value="${exercise.restTime}" onchange="changeRestTime(${exIndex}, this.value)">
                 </div>
-
                 ${setsHTML}
                 <button class="green-btn" onclick="addSet(${exIndex})">Add Set</button>
             </div>
@@ -174,15 +210,12 @@ function changeRestTime(exIndex, value) {
 
 function startRestTimer(exIndex) {
     clearInterval(timerInterval);
-
     timeLeft = currentWorkout.exercises[exIndex].restTime;
-
     updateTimer();
 
     timerInterval = setInterval(() => {
         timeLeft--;
         updateTimer();
-
         if (timeLeft <= 0) clearInterval(timerInterval);
     }, 1000);
 }
@@ -211,7 +244,7 @@ function finishWorkout() {
         duration
     });
 
-    saveData();
+    localStorage.setItem("history", JSON.stringify(history));
 
     currentWorkout = null;
     clearInterval(timerInterval);
@@ -219,48 +252,6 @@ function finishWorkout() {
     renderDashboard();
     renderHistory();
     showPage("dashboard");
-}
-
-function cancelWorkout() {
-    currentWorkout = null;
-    clearInterval(timerInterval);
-    showPage("dashboard");
-}
-
-function renderRoutines() {
-    const list = document.getElementById("routine-list");
-    list.innerHTML = "";
-
-    routines.forEach(r => {
-        list.innerHTML += `
-            <div class="routine-card">
-                <div>
-                    <h3>${r.name}</h3>
-                    <p class="small-text">${r.description || "No description"}</p>
-                    <p class="small-text">${r.exercises.length} exercises</p>
-                </div>
-
-                <div class="button-group">
-                    <button class="green-btn" onclick="startRoutine('${r.name}')">Start</button>
-                    <button class="dark-btn" onclick="deleteRoutine('${r.name}')">Delete</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function renderExercises() {
-    const list = document.getElementById("exercise-list");
-    list.innerHTML = "";
-
-    exercises.forEach(ex => {
-        list.innerHTML += `
-            <div class="exercise-card">
-                <h3>${ex.name}</h3>
-                <p class="small-text">Strength exercise</p>
-            </div>
-        `;
-    });
 }
 
 function renderHistory() {
@@ -278,7 +269,19 @@ function renderHistory() {
     });
 }
 
-/* ✅ UPDATED DASHBOARD WITH LAST SESSION + QUICK START */
+function renderExercises() {
+    const list = document.getElementById("exercise-list");
+    list.innerHTML = "";
+
+    exercises.forEach(ex => {
+        list.innerHTML += `
+            <div class="exercise-card">
+                <h3>${ex.name}</h3>
+            </div>
+        `;
+    });
+}
+
 function renderDashboard() {
     document.getElementById("total-routines").textContent = routines.length;
     document.getElementById("total-workouts").textContent = history.length;
@@ -286,7 +289,6 @@ function renderDashboard() {
     const quickBox = document.getElementById("quick-start-box");
     const lastBox = document.getElementById("last-session-box");
 
-    /* Quick Start */
     if (quickBox) {
         if (routines.length === 0) {
             quickBox.innerHTML = `<p class="small-text">No routines yet</p>`;
@@ -304,11 +306,11 @@ function renderDashboard() {
         }
     }
 
-    /* ✅ NEW: Last Session */
     if (lastBox) {
         if (history.length === 0) {
-            lastBox.innerHTML = `<p class="small-text">No workouts yet</p>`;
+            lastBox.style.display = "none";
         } else {
+            lastBox.style.display = "block";
             const last = history[0];
             lastBox.innerHTML = `
                 <p class="label green">Last Session</p>
@@ -320,10 +322,9 @@ function renderDashboard() {
     }
 }
 
-window.onload = function() {
-    renderRoutines();
-    renderDashboard();
+window.onload = function () {
+    loadExercisesFromDB();
+    loadRoutines();
     renderHistory();
-    renderExercises();
     showPage("dashboard");
 };
