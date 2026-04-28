@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
 
 <header class="navbar">
@@ -47,19 +48,12 @@
             </div>
         </div>
 
-        <!-- ✅ LAST SESSION -->
-        <div id="last-session-box" class="card"></div>
+        <div class="card" id="last-session-box"></div>
 
-        <!-- ✅ QUICK START (IMPROVED) -->
-        <div class="card quick-start">
+        <div class="card">
             <h3>Quick Start</h3>
-            <p class="small-text">Start your latest routine instantly</p>
-
             <div id="quick-start-box"></div>
-
-            <button class="green-btn" onclick="showPage('routines')">
-                View All Routines
-            </button>
+            <button class="green-btn" onclick="showPage('routines')">View Routines</button>
         </div>
     </div>
 
@@ -102,25 +96,25 @@
 
     <!-- WORKOUT -->
     <div id="workout" class="page">
-        <div class="top-row">
-            <div>
-                <p class="label green">Active Workout</p>
-                <h1 id="workout-title">Workout</h1>
-            </div>
-        </div>
-
+        <h1 id="workout-title">Workout</h1>
         <div id="timer-box" class="timer-box">Rest Timer: 00:00</div>
-
         <div id="workout-exercise-list"></div>
 
-        <div class="button-group">
-            <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
-            <button class="green-btn" onclick="finishWorkout()">Finish Workout</button>
-        </div>
+        <button class="green-btn" onclick="finishWorkout()">Finish Workout</button>
+        <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
     </div>
 
 </main>
 
+<!-- ✅ FIXED DATA -->
+<script>
+    window.routines = JSON.parse('{{ routines | tojson | safe }}');
+    window.exercises = JSON.parse('{{ exercises | tojson | safe }}');
+    window.historyData = JSON.parse('{{ history | tojson | safe }}');
+</script>
+
+
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>
