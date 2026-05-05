@@ -3,116 +3,54 @@
 <head>
     <title>Fitness Companion</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
 
-<header class="navbar">
-    <div class="logo">
-        <div class="logo-box">
-            <i class="fas fa-bolt"></i>
-        </div>
-        <span>Fitness Companion</span>
-    </div>
+<h1>Fitness Companion</h1>
 
-    <div class="nav">
-        <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
-        <button class="nav-btn" onclick="showPage('routines')">Routines</button>
-        <button class="nav-btn" onclick="showPage('exercises')">Exercises</button>
-        <button class="nav-btn" onclick="showPage('history')">History</button>
-    </div>
-</header>
+<button onclick="showPage('dashboard')">Dashboard</button>
+<button onclick="showPage('routines')">Routines</button>
+<button onclick="showPage('exercises')">Exercises</button>
+<button onclick="showPage('history')">History</button>
 
-<main class="container">
+<hr>
 
-    <!-- DASHBOARD -->
-    <div id="dashboard" class="page active">
-        <h1>Welcome Back</h1>
-        <p class="subtitle">Track your progress and start your next workout</p>
+<div id="dashboard">
+    <h2>Dashboard</h2>
+    <p>Total Routines: <span id="total-routines"></span></p>
+    <p>Total Workouts: <span id="total-workouts"></span></p>
+</div>
 
-        <div class="cards">
-            <div class="card">
-                <p class="label">Total Workouts</p>
-                <h3 id="total-workouts">0</h3>
-            </div>
+<div id="routines" style="display:none;">
+    <h2>Routines</h2>
 
-            <div class="card">
-                <p class="label">Active Routines</p>
-                <h3 id="total-routines">0</h3>
-            </div>
+    <input id="routine-name" placeholder="Routine name">
+    <button onclick="addRoutine()">Add Routine</button>
 
-            <div class="card">
-                <p class="label">Last Duration</p>
-                <h3 id="last-duration">--</h3>
-            </div>
-        </div>
+    <div id="routine-list"></div>
+</div>
 
-        <div class="card" id="last-session-box"></div>
+<div id="exercises" style="display:none;">
+    <h2>Exercises</h2>
+    <div id="exercise-list"></div>
+</div>
 
-        <div class="card">
-            <h3>Quick Start</h3>
-            <div id="quick-start-box"></div>
-            <button class="green-btn" onclick="showPage('routines')">View Routines</button>
-        </div>
-    </div>
+<div id="history" style="display:none;">
+    <h2>History</h2>
+    <div id="history-list"></div>
+</div>
 
-    <!-- ROUTINES -->
-    <div id="routines" class="page">
-        <div class="top-row">
-            <div>
-                <h1>Routine Library</h1>
-                <p class="subtitle">Manage your workout routines</p>
-            </div>
-            <button class="green-btn" onclick="toggleForm()">Create Routine</button>
-        </div>
+<div id="workout" style="display:none;">
+    <h2 id="workout-title"></h2>
+    <button onclick="finishWorkout()">Finish Workout</button>
+</div>
 
-        <div id="routine-form" class="form-box hidden">
-            <input type="text" id="routine-name" placeholder="Routine name">
-            <input type="text" id="routine-description" placeholder="Description">
-
-            <p class="label">Choose Exercises</p>
-            <div id="exercise-choice-list" class="exercise-choice-list"></div>
-
-            <button class="green-btn" onclick="addRoutine()">Save</button>
-        </div>
-
-        <div id="routine-list"></div>
-    </div>
-
-    <!-- EXERCISES -->
-    <div id="exercises" class="page">
-        <h1>Exercise Database</h1>
-        <p class="subtitle">Browse different movements</p>
-        <div id="exercise-list" class="exercise-grid"></div>
-    </div>
-
-    <!-- HISTORY -->
-    <div id="history" class="page">
-        <h1>Workout History</h1>
-        <p class="subtitle">See your past sessions</p>
-        <div id="history-list"></div>
-    </div>
-
-    <!-- WORKOUT -->
-    <div id="workout" class="page">
-        <h1 id="workout-title">Workout</h1>
-        <div id="timer-box" class="timer-box">Rest Timer: 00:00</div>
-        <div id="workout-exercise-list"></div>
-
-        <button class="green-btn" onclick="finishWorkout()">Finish Workout</button>
-        <button class="dark-btn" onclick="cancelWorkout()">Cancel</button>
-    </div>
-
-</main>
-
-<!-- ✅ FIXED DATA -->
 <script>
     window.routines = JSON.parse('{{ routines | tojson | safe }}');
     window.exercises = JSON.parse('{{ exercises | tojson | safe }}');
     window.historyData = JSON.parse('{{ history | tojson | safe }}');
 </script>
-
 
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 

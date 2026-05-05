@@ -1,290 +1,70 @@
 body {
     margin: 0;
+    padding: 20px;
     background-color: #0a0b0d;
     color: white;
     font-family: Arial, sans-serif;
 }
 
-/* NAVBAR */
-.navbar {
-    background-color: #111317;
-    border-bottom: 1px solid #1f2228;
-    padding: 16px 26px; /* slightly tighter */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* HEADINGS */
+h1 {
+    margin-bottom: 10px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.logo-box {
-    width: 32px;
-    height: 32px;
-    background-color: #00ff88;
-    color: black;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* NAV */
-.nav {
-    display: flex;
-    gap: 8px;
-}
-
-.nav-btn {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    padding: 8px 14px; /* tighter */
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.nav-btn.active {
-    background-color: #00ff88;
-    color: black;
+h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 /* BUTTONS */
-.green-btn {
-    background-color: #00ff88;
-    color: black;
-    border: none;
-    padding: 9px 14px;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.dark-btn {
+button {
     background-color: #1a1d23;
     color: white;
     border: none;
-    padding: 9px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-/* CONTAINER */
-.container {
-    max-width: 1000px; /* 👈 tighter like image 2 */
-    margin: auto;
-    padding: 25px 18px; /* less vertical padding */
-}
-
-/* PAGE SWITCH */
-.page {
-    display: none;
-}
-
-.page.active {
-    display: block;
-}
-
-/* TEXT */
-h1 {
-    font-size: 32px; /* smaller = cleaner */
-    margin-bottom: 6px;
-}
-
-.subtitle {
-    color: #6b7280;
-    margin-bottom: 16px;
-}
-
-/* DASHBOARD CARDS */
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px; /* 👈 tighter spacing */
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-.card {
-    background-color: #111317;
-    border: 1px solid #1f2228;
-    padding: 16px; /* 👈 less padding = smaller cards */
-    border-radius: 12px;
-    margin-bottom: 12px; /* 👈 reduces big vertical gaps */
-}
-
-/* LABELS */
-.label {
-    color: #4b5563;
-    font-size: 11px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-/* TOP ROW */
-.top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-/* FORM */
-.form-box {
-    background-color: #111317;
-    border: 1px solid #1f2228;
-    padding: 16px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-}
-
-input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 9px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    border: none;
-    background-color: #1a1d23;
-    color: white;
-}
-
-.hidden {
-    display: none;
-}
-
-/* ROUTINES */
-.routine-card {
-    background-color: #111317;
-    border: 1px solid #1f2228;
-    padding: 16px;
-    border-radius: 12px;
-    margin-top: 8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.button-group {
-    display: flex;
-    gap: 8px;
-}
-
-/* EXERCISES */
-.exercise-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
-.exercise-card {
-    background-color: #111317;
-    border: 1px solid #1f2228;
-    padding: 16px;
-    border-radius: 12px;
-}
-
-/* TEXT SMALL */
-.small-text {
-    color: #6b7280;
-    font-size: 13px;
-}
-
-/* EXERCISE SELECT */
-.exercise-choice-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.exercise-choice {
-    background-color: #1a1d23;
-    color: white;
-    border: 1px solid #1f2228;
-    border-radius: 8px;
     padding: 8px 12px;
+    margin: 5px 5px 10px 0;
+    border-radius: 6px;
     cursor: pointer;
 }
 
-.exercise-choice.selected {
+button:hover {
     background-color: #00ff88;
     color: black;
 }
 
-/* QUICK BOX */
-.quick-box {
+/* INPUT */
+input {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    margin-right: 10px;
+    background-color: #1a1d23;
+    color: white;
+}
+
+/* SECTIONS */
+#dashboard,
+#routines,
+#exercises,
+#history,
+#workout {
+    margin-top: 20px;
+}
+
+/* LIST ITEMS */
+#routine-list div,
+#exercise-list div,
+#history-list div {
+    background-color: #111317;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* COLORS */
-.green {
-    color: #00ff88;
-}
-
-.quote {
-    font-style: italic;
-    color: #6b7280;
-    margin-top: 8px;
-}
-
-/* WORKOUT */
-.workout-card {
-    background-color: #111317;
-    border: 1px solid #1f2228;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 12px;
-}
-
-.set-row {
-    display: grid;
-    grid-template-columns: 60px 1fr 1fr auto;
-    gap: 8px;
-    margin-top: 8px;
-    align-items: center;
-}
-
-.set-row input {
-    margin-bottom: 0;
-}
-
-/* TIMER */
-.timer-box {
-    background-color: #00ff88;
-    color: black;
-    padding: 10px 16px;
-    border-radius: 10px;
+/* SMALL TEXT FIX */
+span {
     font-weight: bold;
-    margin-bottom: 15px;
-    display: inline-block;
-}
-
-/* REST */
-.rest-box {
-    margin-top: 8px;
-    max-width: 220px;
-}
-
-.rest-box label {
-    font-size: 11px;
-    color: #6b7280;
-}
-
-/* HISTORY */
-.history-item {
-    background-color: #111317;
-    border: 1px solid #1f2228;
-    padding: 14px;
-    border-radius: 10px;
-    margin-bottom: 8px;
 }
