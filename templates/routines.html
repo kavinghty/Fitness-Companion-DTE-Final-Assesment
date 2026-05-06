@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Routines</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+<div class="page">
+
+  <!-- Top: back link + new routine button -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div>
+      <a href="/" class="back-link">← Back</a>
+      <h1>Routines</h1>
+    </div>
+    <button class="log-btn" id="new-btn" onclick="openForm()" style="padding-top:28px;">+ New routine</button>
+  </div>
+
+  <hr class="line" style="margin-top:16px;" />
+
+  <!-- Routine list -->
+  <div id="routine-list"></div>
+
+  <!-- New routine form -->
+  <div class="modal-card" id="form-card" style="display:none; margin-top:16px;">
+    <div class="modal-top">
+      <span class="modal-heading">New routine</span>
+      <button class="close-btn" onclick="closeForm()">✕</button>
+    </div>
+    <input type="text" id="input-name" class="field" placeholder="Routine name" />
+    <input type="text" id="input-desc" class="field" placeholder="Description (optional)" />
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="add-btn" onclick="createRoutine()">Create</button>
+    </div>
+    <p class="error-msg" id="error-msg"></p>
+  </div>
+
+</div>
+
+<!-- Pass routine data from Flask to JavaScript -->
+<script type="application/json" id="routine-data">{{ routines | tojson | safe }}</script>
+<script>
+  var routines = JSON.parse(document.getElementById("routine-data").textContent);
+
+  function showRoutines() {
+    var list = document.getElementById("routine-list");
+    list.innerHTML = "";
+
+    if (routines.length === 0) {
+      list.innerHTML = '<p class="empty">No routines yet. Create your first one!</p>';
+      return;
+    }
+
+    routines.forEach(function (r) {
+      var row = document.createElement("div");
+      row.className = "workout-row";
+      row.innerHTML =
+        '<div class="workout-info">' +
+          '<div class="workout-name">' +
+            '<a href="/routines/' + r.ROUTINE_ID + '" class="link-name">' + safe(r.ROUTINE_NAME) + '</a>' +
+          '</div>' +
+          (r.DESCRIPTION ? '<div class="workout-type">' + safe(r.DESCRIPTION) + '</div>' : '') +
+        '</div>' +
+        '<button class="delete-btn" onclick="deleteRoutine(' + r.ROUTINE_ID + ')">🗑</button>';
+      list.appendChild(row);
+    });
+  }
+
+  function openForm() {
+    document.getElementById("form-card").style.display = "block";
+    document.getElementById("new-btn").style.display   = "none";
+    document.getElementById("error-msg").textContent   = "";
+  }
+
+  function closeForm() {
+    document.getElementById("form-card").style.display = "none";
+    document.getElementById("new-btn").style.display   = "block";
+    document.getElementById("input-name").value = "";
+    document.getElementById("input-desc").value = "";
+  }
+
+  function createRoutine() {
+    var name = document.getElementById("input-name").value.trim();
+    var desc = document.getElementById("input-desc").value.trim();
+    if (!name) {
+      document.getElementById("error-msg").textContent = "Please enter a routine name.";
+      return;
+    }
+    fetch("/create_routine", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name, description: desc })
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (data.error) { document.getElementById("error-msg").textContent = data.error; return; }
+      routines.push(data);
+      showRoutines();
+      closeForm();
+    });
+  }
+
+  function deleteRoutine(id) {
+    if (!confirm("Delete this routine?")) return;
+    fetch("/delete_routine/" + id, { method: "DELETE" })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (data.ok) {
+        routines = routines.filter(function (r) { return r.ROUTINE_ID !== id; });
+        showRoutines();
+      }
+    });
+  }
+
+  function safe(str) {
+    if (!str) return "";
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  showRoutines();
+</script>
+</body>
+</html>
+

@@ -68,5 +68,45 @@ def delete_workout(id):
     return jsonify({"ok": True})
 
 
+# Routines page
+@app.route("/routines")
+def routines():
+    db = get_db()
+    rows = db.execute("SELECT * FROM Routines ORDER BY ROUTINE_NAME").fetchall()
+    db.close()
+    return render_template("routines.html",routines=[dict(r) for r in rows])
+
+
+# Save a new routine
+@app.route("/create_routine", methods=["POST"])
+def create_routine():
+    data = request.get_json()
+    name = data.get("name", "").strip()
+    desc = data.get("description","").strip()
+    if not name:
+        return jsonify({"error": "Please enter a routine name"}), 400
+    db = get_db()
+    db.execute(
+        "INSERT INTO Routines (USER_ID, ROUTINE_NAME, DESCRIPTION) VALUES (1, ?, ?)",
+        (name, desc)
+    )
+    db.commit()
+    new = db.execute("SELECT * FROM Routines WHERE ROUTINE_ID = last_insert_rowid()").fetchone()
+    db.close()
+    return jsonify(dict(new)), 201
+
+
+# Delete a routine
+@app.route("/delete_routine/<int:id>", methods=["DELETE"])
+def delete_routine(id):
+    db = get_db()
+    db.execute("DELETE FROM Routine_Exercise WHERE Routine_ID  = ?", (id,))
+    db.execute("DELETE FROM Routines          WHERE ROUTINE_ID = ?", (id,))
+    db.commit()
+    db.close()
+    return jsonify({"ok": True})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+

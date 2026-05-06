@@ -96,3 +96,15 @@
   color: #cc0000;
   min-height: 16px;
 }
+/* Back link */
+.back-link {
+  display: inline-block;
+  font-size: 14px;
+  color: #888888;
+  text-decoration: none;
+  margin-bottom: 4px;
+}
+
+.back-link:hover {
+  color: #111111;
+}

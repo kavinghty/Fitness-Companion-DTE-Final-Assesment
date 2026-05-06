@@ -22,7 +22,7 @@ function showWorkouts() {
   list.innerHTML = "";
 
   if (workouts.length === 0) {
-    list.innerHTML = '<p class="empty">No workouts yet. Log your first one!</p>';
+    list.innerHTML = '<p class="empty">No workouts yet.</p>';
     document.getElementById("stat-workouts").textContent = "0";
     document.getElementById("stat-minutes").textContent  = "0";
     return;
