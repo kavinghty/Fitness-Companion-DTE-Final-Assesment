@@ -1,58 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Fitness Companion</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8" />
+  <title>Workout Tracker</title>
 </head>
-
 <body>
-
-<h1>Fitness Companion</h1>
-
-<button onclick="showPage('dashboard')">Dashboard</button>
-<button onclick="showPage('routines')">Routines</button>
-<button onclick="showPage('exercises')">Exercises</button>
-<button onclick="showPage('history')">History</button>
-
-<hr>
-
-<div id="dashboard">
-    <h2>Dashboard</h2>
-    <p>Total Routines: <span id="total-routines"></span></p>
-    <p>Total Workouts: <span id="total-workouts"></span></p>
-</div>
-
-<div id="routines" style="display:none;">
-    <h2>Routines</h2>
-
-    <input id="routine-name" placeholder="Routine name">
-    <button onclick="addRoutine()">Add Routine</button>
-
-    <div id="routine-list"></div>
-</div>
-
-<div id="exercises" style="display:none;">
-    <h2>Exercises</h2>
-    <div id="exercise-list"></div>
-</div>
-
-<div id="history" style="display:none;">
-    <h2>History</h2>
-    <div id="history-list"></div>
-</div>
-
-<div id="workout" style="display:none;">
-    <h2 id="workout-title"></h2>
-    <button onclick="finishWorkout()">Finish Workout</button>
-</div>
-
-<script>
-    window.routines = JSON.parse('{{ routines | tojson | safe }}');
-    window.exercises = JSON.parse('{{ exercises | tojson | safe }}');
-    window.historyData = JSON.parse('{{ history | tojson | safe }}');
-</script>
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-
+  <h1>Workout Tracker</h1>
 </body>
 </html>
