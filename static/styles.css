@@ -1,25 +1,103 @@
-/* Basic reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* Small grey date text */
+.date-label {
+  font-size: 12px;
+  color: #888888;
+  margin-bottom: 4px;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background: #ffffff;
+/* Stats row */
+.stats {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.big-num {
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.small-label {
+  font-size: 13px;
+  color: #888888;
+}
+
+/* Horizontal line */
+.line {
+  border: none;
+  border-top: 1px solid #dddddd;
+  margin-bottom: 0;
+}
+
+/* Each workout row */
+.workout-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #dddddd;
+}
+
+.workout-name {
+  font-size: 15px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.workout-type {
+  font-size: 13px;
+  color: #888888;
+}
+
+.workout-date {
+  font-size: 12px;
+  color:  #aaaaaa;
+}
+
+.workout-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Empty state message */
+.empty {
+  padding: 24px 0;
+  color: #aaaaaa;
+  font-size: 14px;
+}
+
+/* Routines nav link */
+.routines-link {
+  font-size: 14px;
+  color: #888888;
+  text-decoration: none;
+}
+
+.routines-link:hover {
   color: #111111;
+}
+
+/* Clickable routine name */
+.link-name {
+  text-decoration: none;
+  color: #111111;
+}
+
+.link-name:hover {
+  text-decoration: underline;
+}
+
+/* Delete button */
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
   font-size: 16px;
+  color: #aaaaaa;
+  padding: 4px;
 }
 
-/* Main container */
-.page {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 40px 20px;
-}
-
-h1 {
-  font-size: 36px;
-  margin-bottom: 24px;
+.delete-btn:hover {
+  color: #cc0000;
 }

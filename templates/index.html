@@ -9,8 +9,35 @@
 <body>
 <div class="page">
 
-  <h1>Today</h1>
+  <!-- Top: date + routines link -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div>
+      <p class="date-label" id="date-label"></p>
+      <h1>Today</h1>
+    </div>
+    <a href="/routines" class="routines-link">Routines →</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div>
+      <div class="big-num" id="stat-minutes">0</div>
+      <div class="small-label">minutes</div>
+    </div>
+    <div>
+      <div class="big-num" id="stat-workouts">0</div>
+      <div class="small-label">workouts</div>
+    </div>
+  </div>
+
+  <!-- Workout list -->
+  <hr class="line" />
+  <div id="workout-list"></div>
 
 </div>
+
+<!-- Pass workout data from Flask to JavaScript -->
+<script type="application/json" id="workout-data">{{ workouts | tojson | safe }}</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
