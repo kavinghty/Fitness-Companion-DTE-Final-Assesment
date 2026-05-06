@@ -1,103 +1,98 @@
-/* Small grey date text */
-.date-label {
-  font-size: 12px;
-  color: #888888;
-  margin-bottom: 4px;
-}
-
-/* Stats row */
-.stats {
-  display: flex;
-  gap: 32px;
-  margin-bottom: 32px;
-}
-
-.big-num {
-  font-size: 42px;
-  font-weight: bold;
-}
-
-.small-label {
-  font-size: 13px;
-  color: #888888;
-}
-
-/* Horizontal line */
-.line {
+/* Log workout button */
+.log-btn {
+  background: none;
   border: none;
-  border-top: 1px solid #dddddd;
-  margin-bottom: 0;
+  cursor: pointer;
+  font-size: 15px;
+  color: #888888;
+  padding: 16px 0 0;
+  display: block;
 }
 
-/* Each workout row */
-.workout-row {
+.log-btn:hover {
+   color: #111111;
+}
+
+/* Form card */
+.modal-card {
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 12px;
+}
+
+.modal-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
-  border-bottom: 1px solid #dddddd;
+  margin-bottom: 16px;
 }
 
-.workout-name {
+.modal-heading {
   font-size: 15px;
   font-weight: bold;
-  margin-bottom: 2px;
 }
 
-.workout-type {
-  font-size: 13px;
-  color: #888888;
-}
-
-.workout-date {
-  font-size: 12px;
-  color:  #aaaaaa;
-}
-
-.workout-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Empty state message */
-.empty {
-  padding: 24px 0;
-  color: #aaaaaa;
-  font-size: 14px;
-}
-
-/* Routines nav link */
-.routines-link {
-  font-size: 14px;
-  color: #888888;
-  text-decoration: none;
-}
-
-.routines-link:hover {
-  color: #111111;
-}
-
-/* Clickable routine name */
-.link-name {
-  text-decoration: none;
-  color: #111111;
-}
-
-.link-name:hover {
-  text-decoration: underline;
-}
-
-/* Delete button */
-.delete-btn {
+.close-btn {
   background: none;
   border: none;
   cursor: pointer;
   font-size: 16px;
   color: #aaaaaa;
-  padding: 4px;
 }
 
-.delete-btn:hover {
+/* Input fields */
+.field {
+  width: 100%;
+  background: #f5f5f5;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #111111;
+  margin-bottom: 10px;
+  outline: none;
+  appearance: none;
+  font-family: Arial, sans-serif;
+}
+
+.field:focus {
+  border-color: #111111;
+  background: #ffffff;
+}
+
+/* Side by side fields */
+.row-fields {
+  display: flex;
+  gap: 10px;
+}
+
+.row-fields .field {
+   margin-bottom: 10px;
+}
+
+/* Add / Create button */
+.add-btn {
+  background: #111111;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-bottom: 10px;
+  font-family: Arial,sans-serif;
+}
+
+.add-btn:hover {
+  background: #333333;
+}
+
+/* Error message */
+.error-msg {
+  font-size: 12px;
   color: #cc0000;
+  min-height: 16px;
 }

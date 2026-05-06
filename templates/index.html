@@ -34,6 +34,35 @@
   <hr class="line" />
   <div id="workout-list"></div>
 
+  <!-- Button to open the form -->
+  <button class="log-btn" id="log-btn" onclick="openModal()">+ Log workout</button>
+
+  <!-- Log workout form -->
+  <div class="modal-card" id="modal-card" style="display:none;">
+    <div class="modal-top">
+      <span class="modal-heading">Log workout</span>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+
+    <select id="input-routine" class="field">
+      <option value="" disabled selected>Select routine</option>
+      {% for r in routines %}
+      <option value="{{ r.ROUTINE_ID }}">{{ r.ROUTINE_NAME }}</option>
+      {% endfor %}
+    </select>
+
+    <div class="row-fields">
+      <input type="date" id="input-date" class="field" style="flex:1;" />
+      <input type="time" id="input-time" class="field" style="flex:1;" />
+    </div>
+
+    <div style="display:flex; justify-content:flex-end;">
+      <button class="add-btn" onclick="addWorkout()">Add</button>
+    </div>
+
+    <p class="error-msg" id="error-msg"></p>
+  </div>
+
 </div>
 
 <!-- Pass workout data from Flask to JavaScript -->

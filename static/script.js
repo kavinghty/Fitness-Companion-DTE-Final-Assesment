@@ -8,6 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("date-label").textContent =
     now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase();
 
+  // Pre-fill today's date and time in the form
+  document.getElementById("input-date").value = getDateString(now);
+    document.getElementById("input-time").value = getTimeString(now);
+
   showWorkouts();
 });
 
@@ -64,6 +68,70 @@ function showWorkouts() {
 }
 
 
+// Open the log workout form
+function openModal() {
+  document.getElementById("modal-card").style.display = "block";
+  document.getElementById("log-btn").style.display = "none";
+    document.getElementById("error-msg").textContent = "";
+}
+
+// Close the log workout form
+function closeModal() {
+  document.getElementById("modal-card").style.display = "none";
+  document.getElementById("log-btn").style.display    = "block";
+}
+
+
+// Send a new workout to the server and show it on the page
+function addWorkout() {
+  var routineId = document.getElementById("input-routine").value;
+  var date = document.getElementById("input-date").value;
+  var time      = document.getElementById("input-time").value;
+
+  if (!routineId) {
+    document.getElementById("error-msg").textContent = "Please select a routine.";
+    return;
+  }
+  if (!date || !time) {
+    document.getElementById("error-msg").textContent = "Please enter a date and time.";
+    return;
+  }
+
+  fetch("/add_workout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ routine_id: parseInt(routineId), date: date + " " + time + ":00" })
+  })
+  .then(function (res) { return res.json(); })
+  .then(function(data) {
+    if (data.error) {
+      document.getElementById("error-msg").textContent = data.error;
+      return;
+    }
+    workouts.unshift(data);
+    showWorkouts();
+    closeModal();
+    document.getElementById("input-routine").value = "";
+  })
+  .catch(function () {
+    document.getElementById("error-msg").textContent = "Something went wrong.";
+  });
+}
+
+
+// Delete a workout
+function deleteWorkout(id) {
+  if (!confirm("Delete this workout?")) return;
+
+  fetch("/delete_workout/" + id, { method: "DELETE" })
+  .then(function()  { return; })
+  .then(function () {
+    workouts = workouts.filter(function (w) { return w.Session_ID !== id; });
+    showWorkouts();
+  });
+}
+
+
 // Turn "2026-05-06 18:00:00" into "Today · 6:00 PM"
 function formatDate(str) {
   if (!str) return "";
@@ -87,6 +155,12 @@ function getDateString(d) {
   return d.getFullYear() + "-" +
     String(d.getMonth() + 1).padStart(2, "0") + "-" +
     String(d.getDate()).padStart(2,"0");
+}
+
+// Returns "HH:MM"
+function getTimeString(d) {
+  return String(d.getHours()).padStart(2, "0") + ":" +
+    String(d.getMinutes()).padStart(2,  "0");
 }
 
 // Stops special characters from breaking the HTML

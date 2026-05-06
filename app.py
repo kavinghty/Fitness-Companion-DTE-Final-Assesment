@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -29,6 +29,43 @@ def index():
         workouts=[dict(w) for w in workouts],
         routines =[dict(r) for r in routines]
     )
+
+
+# Save a new workout
+@app.route("/add_workout", methods=["POST"])
+def add_workout():
+    data = request.get_json()
+    routine_id = data.get("routine_id")
+    date = data.get("date")
+    if not routine_id or not date:
+        return jsonify({"error": "Please fill in all fields"}), 400
+    db = get_db()
+    db.execute(
+        "INSERT INTO Workout_Log (User_ID, Routine_ID, Date) VALUES (1, ?, ?)",
+        (routine_id, date)
+    )
+    db.commit()
+    new = db.execute("""
+        SELECT wl.Session_ID, wl.Routine_ID, wl.Date,
+               r.ROUTINE_NAME AS routine_name,
+               r.DESCRIPTION  AS description
+        FROM Workout_Log wl
+        LEFT JOIN Routines r ON wl.Routine_ID = r.ROUTINE_ID
+        WHERE wl.Session_ID = last_insert_rowid()
+    """).fetchone()
+    db.close()
+    return jsonify(dict(new)), 201
+
+
+# Delete a workout
+@app.route("/delete_workout/<int:id>", methods=["DELETE"])
+def delete_workout(id):
+    db = get_db()
+    db.execute("DELETE FROM Workout_Set  WHERE Session_ID = ?", (id,))
+    db.execute("DELETE FROM Workout_Log  WHERE Session_ID = ?", (id,))
+    db.commit()
+    db.close()
+    return jsonify({"ok": True})
 
 
 if __name__ == "__main__":
