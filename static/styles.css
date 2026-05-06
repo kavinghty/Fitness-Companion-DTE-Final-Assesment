@@ -1,0 +1,25 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #ffffff;
+  color: #111111;
+  font-size: 16px;
+}
+
+/* Main container */
+.page {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 24px;
+}
