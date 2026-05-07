@@ -107,6 +107,73 @@ def delete_routine(id):
     return jsonify({"ok": True})
 
 
+# Single routine page
+@app.route("/routines/<int:id>")
+def routine_detail(id):
+    db = get_db()
+    routine = db.execute(
+        "SELECT * FROM Routines WHERE ROUTINE_ID = ?", (id,)
+    ).fetchone()
+    if not routine:
+        return "Routine not found", 404
+    exercises = db.execute("""
+        SELECT re.Routine_Exercise_ID, re.Routine_Sets, re.Routine_Reps,
+               re.Rest_Time, e.Name AS exercise_name
+        FROM Routine_Exercise re
+        JOIN Exercise e ON re.Exercise_ID = e.Exercise_ID
+        WHERE re.Routine_ID = ?
+        ORDER BY re.Routine_Order
+    """, (id,)).fetchall()
+    all_exercises = db.execute(
+        "SELECT Exercise_ID, Name FROM Exercise ORDER BY Name"
+    ).fetchall()
+    db.close()
+    return render_template("routine_detail.html",
+        routine=dict(routine),
+        exercises =  [dict(e) for e in exercises],
+        all_exercises=[dict(e) for e in all_exercises]
+    )
+
+
+# Add an exercise to a routine
+@app.route("/add_exercise_to_routine", methods=["POST"])
+def add_exercise_to_routine():
+    data = request.get_json()
+    routine_id  = data.get("routine_id")
+    exercise_id = data.get("exercise_id")
+    sets  = data.get("sets", 3)
+    reps  = data.get("reps", 10)
+    rest  = data.get("rest_time", 60)
+    order = data.get("order", 1)
+    if not routine_id or not exercise_id:
+        return jsonify({"error": "Missing fields"}), 400
+    db = get_db()
+    db.execute("""
+        INSERT INTO Routine_Exercise
+            (Routine_ID, Exercise_ID, Rest_Time, Routine_Order, Routine_Sets, Routine_Reps)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (routine_id, exercise_id, rest, order, sets, reps))
+    db.commit()
+    new = db.execute("""
+        SELECT re.Routine_Exercise_ID, re.Routine_Sets, re.Routine_Reps,
+               re.Rest_Time, e.Name AS exercise_name
+        FROM Routine_Exercise re
+        JOIN Exercise e ON re.Exercise_ID = e.Exercise_ID
+        WHERE re.Routine_Exercise_ID = last_insert_rowid()
+    """).fetchone()
+    db.close()
+    return jsonify(dict(new)), 201
+
+
+# Remove an exercise from a routine
+@app.route("/remove_exercise/<int:id>", methods=["DELETE"])
+def remove_exercise(id):
+    db = get_db()
+    db.execute("DELETE FROM Routine_Exercise WHERE Routine_Exercise_ID = ?", (id,))
+    db.commit()
+    db.close()
+    return jsonify({"ok": True})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
-
