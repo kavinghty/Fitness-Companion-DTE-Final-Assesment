@@ -42,6 +42,10 @@ body {
   text-decoration: none;
 }
 
+.nav-logo span {
+  color: var(--dark);
+}
+
 .nav-links {
   display: flex;
   gap: 4px;
@@ -159,7 +163,7 @@ body {
   flex: 1;
 }
 
-/* small square dot */
+/* the little square dot next to each workout */
 .workout-dot {
   width: 8px;
   height: 8px;
@@ -191,6 +195,7 @@ body {
   color: var(--text-grey);
   font-size: 14px;
 }
+
 
 /* dark button */
 .btn-primary {
@@ -240,7 +245,7 @@ body {
   color: var(--red);
 }
 
-/* top bar */
+/* top bar - heading on left, button on right */
 .top-bar {
   display: flex;
   justify-content: space-between;
@@ -248,7 +253,7 @@ body {
   margin-bottom: 16px;
 }
 
-/* form */
+/* form that slides in */
 .form-sheet {
   background: var(--white);
   border: 1px solid var(--dark);
@@ -336,7 +341,7 @@ body {
   flex: 1;
 }
 
-/* form buttons */
+/* buttons at the bottom of the form */
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -523,3 +528,4 @@ body {
     font-size: 13px;
   }
 }
+

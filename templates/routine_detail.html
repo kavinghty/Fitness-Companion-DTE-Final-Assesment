@@ -3,85 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{ routine.ROUTINE_NAME }}</title>
+  <title>{{ routine.ROUTINE_NAME }} – Fitness Companion</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
+
+<!-- nav bar -->
+<nav class="nav">
+  <a href="/" class="nav-logo">Fitness Companion</a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Today</a>
+    <a href="/routines" class="nav-link active">Routines</a>
+    <a href="/stats" class="nav-link">Stats</a>
+  </div>
+</nav>
+
 <div class="page">
 
-  <!-- Top: back link + add exercise button -->
-  <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-    <div>
-      <a href="/routines" class="back-link">← Routines</a>
-      <h1>{{ routine.ROUTINE_NAME }}</h1>
+  <a href="/routines" class="back-link">← back to routines</a>
+
+  <!-- heading and add button -->
+  <div class="top-bar">
+    <div class="page-header" style="margin-bottom:0;">
       {% if routine.DESCRIPTION %}
-      <p style="color:#888888; font-size:14px;">{{ routine.DESCRIPTION }}</p>
+      <p class="label">{{ routine.DESCRIPTION }}</p>
+      {% else %}
+      <p class="label">Routine</p>
       {% endif %}
+      <h1>{{ routine.ROUTINE_NAME }}</h1>
     </div>
-    <button class="log-btn" id="add-btn" onclick="openForm()" style="padding-top:28px;">+ Add exercise</button>
+    <button class="btn-primary" id="add-btn" onclick="openForm()">+ Add</button>
   </div>
 
-  <hr class="line" style="margin-top:16px;" />
-
-  <!-- Exercise list -->
-  <div id="exercise-list"></div>
-
-  <!-- Add exercise form -->
-  <div class="modal-card" id="form-card" style="display:none; margin-top:16px;">
-    <div class="modal-top">
-      <span class="modal-heading">Add exercise</span>
+  <!-- add exercise form - hidden by default -->
+  <div class="form-sheet" id="form-sheet">
+    <div class="form-sheet-top">
+      <span class="form-title">Add exercise</span>
       <button class="close-btn" onclick="closeForm()">✕</button>
     </div>
 
-    <label class="field-label">Exercise</label>
-    <select id="input-exercise" class="field">
-      <option value="" disabled selected>Select exercise</option>
-      {% for e in all_exercises %}
-      <option value="{{ e.Exercise_ID }}">{{ e.Name }}</option>
-      {% endfor %}
-    </select>
+    <div class="field-group">
+      <label class="field-label">Exercise</label>
+      <select id="input-exercise" class="field">
+        <option value="" disabled selected>Choose an exercise...</option>
+        {% for e in all_exercises %}
+        <option value="{{ e.Exercise_ID }}">{{ e.Name }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-    <div class="row-fields">
-      <div style="flex:1;">
+    <div class="fields-row">
+      <div class="field-group">
         <label class="field-label">Sets</label>
         <input type="number" id="input-sets" class="field" value="3" min="1" />
       </div>
-      <div style="flex:1;">
+      <div class="field-group">
         <label class="field-label">Reps</label>
         <input type="number" id="input-reps" class="field" value="10" min="1" />
       </div>
-      <div style="flex:1;">
-        <label class="field-label">Weight (kg)</label>
+      <div class="field-group">
+        <label class="field-label">kg</label>
         <input type="number" id="input-weight" class="field" value="0" min="0" step="0.5" />
       </div>
-      <div style="flex:1;">
-        <label class="field-label">Rest (sec)</label>
+      <div class="field-group">
+        <label class="field-label">Rest (s)</label>
         <input type="number" id="input-rest" class="field" value="60" min="0" />
       </div>
     </div>
 
-    <div style="display:flex; justify-content:flex-end;">
-      <button class="add-btn" onclick="addExercise()">Add</button>
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeForm()">Cancel</button>
+      <button class="btn-primary" onclick="addExercise()">Add</button>
     </div>
 
     <p class="error-msg" id="error-msg"></p>
   </div>
 
+  <!-- exercise list -->
+  <div class="card" style="padding: 0 20px;">
+    <div id="exercise-list"></div>
+  </div>
+
 </div>
 
-<!-- Pass data from Flask to JavaScript -->
+<!-- flask passes the data to javascript here -->
 <script type="application/json" id="exercise-data">{{ exercises | tojson | safe }}</script>
 <script type="application/json" id="routine-meta">{{ {"id": routine.ROUTINE_ID} | tojson | safe }}</script>
 <script>
-  var ROUTINE_ID = JSON.parse(document.getElementById("routine-meta").textContent).id;
-  var exercises  = JSON.parse(document.getElementById("exercise-data").textContent);
 
+  var ROUTINE_ID = JSON.parse(document.getElementById("routine-meta").textContent).id;
+  var exercises = JSON.parse(document.getElementById("exercise-data").textContent);
+
+  // draw the exercise list
   function showExercises() {
+
     var list = document.getElementById("exercise-list");
     list.innerHTML = "";
 
     if (exercises.length === 0) {
-      list.innerHTML = '<p class="empty">No exercises yet. Add your first one!</p>';
+      list.innerHTML =
+        '<div class="empty">' +
+          '<div class="empty-icon"></div>' +
+          '<p>No exercises yet. Add your first one!</p>' +
+        '</div>';
       return;
     }
 
@@ -89,39 +113,47 @@
       var row = document.createElement("div");
       row.className = "exercise-row";
       row.innerHTML =
-        '<div>' +
-          '<div class="workout-name">' + (index + 1) + '. ' + safe(ex.exercise_name) + '</div>' +
-          '<div class="ex-tags">' +
-            '<span class="tag">' + ex.Routine_Sets + ' sets</span>' +
-            '<span class="tag">' + ex.Routine_Reps + ' reps</span>' +
-            '<span class="tag">Rest ' + ex.Rest_Time + 's</span>' +
+        '<div style="display:flex; align-items:flex-start; gap:10px; flex:1;">' +
+          '<span class="ex-num">' + (index + 1) + '</span>' +
+          '<div>' +
+            '<div class="ex-name">' + safe(ex.exercise_name) + '</div>' +
+            '<div class="ex-tags">' +
+              '<span class="tag">' + ex.Routine_Sets + ' sets</span>' +
+              '<span class="tag">' + ex.Routine_Reps + ' reps</span>' +
+              '<span class="tag">' + ex.Rest_Time + 's rest</span>' +
+            '</div>' +
           '</div>' +
         '</div>' +
-        '<button class="delete-btn" onclick="removeExercise(' + ex.Routine_Exercise_ID + ')">🗑</button>';
+        '<button class="delete-btn" onclick="removeExercise(' + ex.Routine_Exercise_ID + ')">✕</button>';
       list.appendChild(row);
     });
+
   }
 
+  // open the form
   function openForm() {
-    document.getElementById("form-card").style.display = "block";
-    document.getElementById("add-btn").style.display   = "none";
-    document.getElementById("error-msg").textContent   = "";
+    document.getElementById("form-sheet").classList.add("open");
+    document.getElementById("add-btn").style.display = "none";
+    document.getElementById("error-msg").textContent = "";
   }
 
+  // close the form
   function closeForm() {
-    document.getElementById("form-card").style.display = "none";
-    document.getElementById("add-btn").style.display   = "block";
-    document.getElementById("input-exercise").value    = "";
+    document.getElementById("form-sheet").classList.remove("open");
+    document.getElementById("add-btn").style.display = "inline-flex";
+    document.getElementById("input-exercise").value = "";
   }
 
+  // save the exercise
   function addExercise() {
+
     var exerciseId = document.getElementById("input-exercise").value;
-    var sets       = parseInt(document.getElementById("input-sets").value)    || 3;
-    var reps       = parseInt(document.getElementById("input-reps").value)    || 10;
-    var rest       = parseInt(document.getElementById("input-rest").value)    || 60;
+    var sets = parseInt(document.getElementById("input-sets").value) || 3;
+    var reps = parseInt(document.getElementById("input-reps").value) || 10;
+    var rest = parseInt(document.getElementById("input-rest").value) || 60;
 
     if (!exerciseId) {
-      document.getElementById("error-msg").textContent = "Please select an exercise.";
+      document.getElementById("error-msg").textContent = "Please choose an exercise.";
       return;
     }
 
@@ -129,25 +161,32 @@
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        routine_id:  ROUTINE_ID,
+        routine_id: ROUTINE_ID,
         exercise_id: parseInt(exerciseId),
-        sets:        sets,
-        reps:        reps,
-        rest_time:   rest,
-        order:       exercises.length + 1
+        sets: sets,
+        reps: reps,
+        rest_time: rest,
+        order: exercises.length + 1
       })
     })
     .then(function (res) { return res.json(); })
     .then(function (data) {
-      if (data.error) { document.getElementById("error-msg").textContent = data.error; return; }
+      if (data.error) {
+        document.getElementById("error-msg").textContent = data.error;
+        return;
+      }
       exercises.push(data);
       showExercises();
       closeForm();
     });
+
   }
 
+  // remove an exercise
   function removeExercise(id) {
+
     if (!confirm("Remove this exercise?")) return;
+
     fetch("/remove_exercise/" + id, { method: "DELETE" })
     .then(function (res) { return res.json(); })
     .then(function (data) {
@@ -156,14 +195,22 @@
         showExercises();
       }
     });
+
   }
 
+  // stops special characters breaking the page
   function safe(str) {
     if (!str) return "";
-    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   showExercises();
+
 </script>
 </body>
 </html>
+

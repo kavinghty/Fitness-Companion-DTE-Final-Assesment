@@ -8,6 +8,7 @@
 </head>
 <body>
 
+<!-- nav bar -->
 <nav class="nav">
   <a href="/" class="nav-logo">Fitness Companion</a>
   <div class="nav-links">
@@ -19,11 +20,13 @@
 
 <div class="page">
 
+  <!-- heading -->
   <div class="page-header">
     <p class="label" id="date-label"></p>
     <h1>Today</h1>
   </div>
 
+  <!-- stats -->
   <div class="stats-strip">
     <div class="stat-card">
       <div class="num dark" id="stat-workouts">0</div>
@@ -35,10 +38,12 @@
     </div>
   </div>
 
+  <!-- log workout button -->
   <button class="btn-primary" id="log-btn" onclick="openForm()" style="margin-bottom:20px;">
     + Log workout
   </button>
 
+  <!-- log workout form - hidden by default -->
   <div class="form-sheet" id="form-sheet">
     <div class="form-sheet-top">
       <span class="form-title">Log a workout</span>
@@ -74,6 +79,7 @@
     <p class="error-msg" id="error-msg"></p>
   </div>
 
+  <!-- workout list -->
   <p class="section-heading">Workout log</p>
   <div class="card" style="padding: 0 20px;">
     <div id="workout-list"></div>
@@ -81,7 +87,9 @@
 
 </div>
 
+<!-- flask passes the workouts to javascript here -->
 <script type="application/json" id="workout-data">{{ workouts | tojson | safe }}</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
+

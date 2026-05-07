@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stats – Fitness Companion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+
+<!-- nav bar -->
+<nav class="nav">
+  <a href="/" class="nav-logo">Fitness Companion</a>
+  <div class="nav-links">
+    <a href="/" class="nav-link">Today</a>
+    <a href="/routines" class="nav-link">Routines</a>
+    <a href="/stats" class="nav-link active">Stats</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- heading -->
+  <div class="page-header">
+    <p class="label">Your progress</p>
+    <h1>Stats</h1>
+  </div>
+
+  <!-- four big numbers -->
+  <div class="stats-grid">
+    <div class="card">
+      <div class="big">{{ total_workouts }}</div>
+      <div class="lbl">total workouts</div>
+    </div>
+    <div class="card">
+      <div class="big">{{ total_routines }}</div>
+      <div class="lbl">routines</div>
+    </div>
+    <div class="card">
+      <div class="big">{{ this_week }}</div>
+      <div class="lbl">this week</div>
+    </div>
+    <div class="card">
+      <div class="big">{{ this_month }}</div>
+      <div class="lbl">this month</div>
+    </div>
+  </div>
+
+  <!-- bar chart -->
+  <p class="section-heading">Workouts – last 7 days</p>
+  <div class="card">
+    <div class="chart-wrap">
+      <div class="chart-bars" id="chart-bars"></div>
+    </div>
+  </div>
+
+  <!-- most used routine -->
+  {% if top_routine %}
+  <p class="section-heading" style="margin-top:20px;">Most used routine</p>
+  <div class="card">
+    <div class="workout-row" style="border:none; padding:6px 0;">
+      <div class="workout-left">
+        <div class="workout-dot"></div>
+        <div>
+          <div class="workout-name">{{ top_routine.name }}</div>
+          <div class="workout-meta">logged {{ top_routine.count }} time{{ 's' if top_routine.count != 1 else '' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- flask passes chart data to javascript here -->
+<script type="application/json" id="chart-data">{{ chart_data | tojson | safe }}</script>
+<script>
+
+  var chartData = JSON.parse(document.getElementById("chart-data").textContent);
+
+  // find the biggest number so we can scale the bars
+  var maxValue = 0;
+  chartData.forEach(function (d) {
+    if (d.count > maxValue) {
+      maxValue = d.count;
+    }
+  });
+
+  // avoid dividing by zero
+  if (maxValue === 0) {
+    maxValue = 1;
+  }
+
+  var container = document.getElementById("chart-bars");
+
+  // make a bar for each day
+  chartData.forEach(function (d) {
+
+    // work out how tall the bar should be
+    var heightPct = (d.count / maxValue) * 100;
+
+    var col = document.createElement("div");
+    col.className = "bar-col";
+
+    // show the count number above the bar
+    var countHtml;
+    if (d.count > 0) {
+      countHtml = '<div class="bar-count">' + d.count + '</div>';
+    } else {
+      countHtml = '<div class="bar-count" style="color:transparent;">0</div>';
+    }
+
+    // use a grey bar if count is 0
+    var barClass;
+    if (d.count === 0) {
+      barClass = "bar empty";
+    } else {
+      barClass = "bar";
+    }
+
+    col.innerHTML =
+      countHtml +
+      '<div class="' + barClass + '" style="height:' + heightPct + '%"></div>' +
+      '<div class="bar-label">' + d.day + '</div>';
+
+    container.appendChild(col);
+
+  });
+
+</script>
+</body>
+</html>
+
