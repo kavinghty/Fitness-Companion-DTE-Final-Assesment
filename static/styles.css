@@ -162,15 +162,6 @@ body {
   gap: 10px;
   flex: 1;
 }
-
-/* the little square dot next to each workout */
-.workout-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--dark);
-  flex-shrink: 0;
-}
-
 .workout-name {
   font-size: 15px;
   font-weight: 600;
