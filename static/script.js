@@ -4,29 +4,26 @@ var workouts = JSON.parse(document.getElementById("workout-data").textContent);
 // runs when page loads
 document.addEventListener("DOMContentLoaded", function () {
 
+  // show todays date
   var now = new Date();
-
-  // show the date at the top
   var dateText = now.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
   document.getElementById("date-label").textContent = dateText.toUpperCase();
 
-  // set todays date and time in the form
-  var today = getDateStr(now);
-  var currentTime = getTimeStr(now);
-  document.getElementById("input-date").value = today;
-    document.getElementById("input-time").value = currentTime;
+  // fill in todays date and time
+  document.getElementById("input-date").value = getDateStr(now);
+  document.getElementById("input-time").value = getTimeStr(now);
 
   showWorkouts();
 
 });
 
 
+// draws the workout list
 function showWorkouts() {
 
   var list = document.getElementById("workout-list");
   list.innerHTML = "";
 
-  // if no workouts show a message
   if (workouts.length === 0) {
     list.innerHTML = '<div class="empty"><p>No workouts logged yet</p></div>';
     document.getElementById("stat-workouts").textContent = "0";
@@ -36,11 +33,9 @@ function showWorkouts() {
 
   var todayStr = getDateStr(new Date());
   var count = 0;
-  var x = 0; // tried using this earlier, forgot to remove
 
   workouts.forEach(function (w) {
 
-    // count todays workouts
     if (w.Date && w.Date.startsWith(todayStr)) {
       count = count + 1;
     }
@@ -48,16 +43,11 @@ function showWorkouts() {
     var row = document.createElement("div");
     row.className = "workout-row";
 
-    // get the info we need
-    var name = w.routine_name;
-    if (!name) {
-      name = "Workout";
-    }
+    var name = w.routine_name || "Workout";
     var type = w.description || "";
     var dateText = niceDate(w.Date);
     var routine_id = w.Routine_ID;
 
-    // make name a link if we have an id
     var nameHtml;
     if (routine_id) {
       nameHtml = '<a href="/routines/' + routine_id + '" class="link-name">' + safe(name) + '</a>';
@@ -65,7 +55,6 @@ function showWorkouts() {
       nameHtml = safe(name);
     }
 
-    // build the row html
     row.innerHTML =
       '<div class="workout-left">' +
         '<div class="workout-dot"></div>' +
@@ -80,14 +69,12 @@ function showWorkouts() {
 
   });
 
-  // update stats at top
   document.getElementById("stat-workouts").textContent = count;
-  document.getElementById("stat-minutes").textContent = "0"; // TODO: add duration to db later
+  document.getElementById("stat-minutes").textContent = "0";
 
 }
 
 
-// opens the form
 function openForm() {
   document.getElementById("form-sheet").classList.add("open");
   document.getElementById("log-btn").style.display = "none";
@@ -95,20 +82,17 @@ function openForm() {
 }
 
 function closeForm() {
-  // hide the form and show the button again
   document.getElementById("form-sheet").classList.remove("open");
-    document.getElementById("log-btn").style.display = "inline-flex";
+  document.getElementById("log-btn").style.display = "inline-flex";
 }
 
 
-// this saves the workout to the database
 function addWorkout() {
 
   var routineId = document.getElementById("input-routine").value;
   var date = document.getElementById("input-date").value;
   var time = document.getElementById("input-time").value;
 
-  // make sure fields are filled in
   if (!routineId) {
     document.getElementById("error-msg").textContent = "Please pick a routine.";
     return;
@@ -119,32 +103,21 @@ function addWorkout() {
     return;
   }
 
-  // combine date and time
-  var datetime = date + " " + time + ":00";
-
   fetch("/add_workout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ routine_id: parseInt(routineId), date: datetime })
+    body: JSON.stringify({ routine_id: parseInt(routineId), date: date + " " + time + ":00" })
   })
-  .then(function (res) {
-    return res.json();
-  })
+  .then(function (res) { return res.json(); })
   .then(function (data) {
-
     if (data.error) {
       document.getElementById("error-msg").textContent = data.error;
       return;
     }
-
-    // add to list and close form
     workouts.unshift(data);
     showWorkouts();
     closeForm();
-
-    // reset the routine dropdown
     document.getElementById("input-routine").value = "";
-
   })
   .catch(function () {
     document.getElementById("error-msg").textContent = "Something went wrong.";
@@ -155,41 +128,31 @@ function addWorkout() {
 
 function deleteWorkout(id) {
 
-  var confirmed = confirm("Delete this workout?");
-  if (!confirmed) return;
+  if (!confirm("Delete this workout?")) return;
 
   fetch("/delete_workout/" + id, { method: "DELETE" })
-  .then(function (res) {
-    return res.json();
-  })
-  .then(function (data) {
-    // remove from the array and redraw
-    workouts = workouts.filter(function (w) {
-      return w.Session_ID !== id;
-    });
+  .then(function (res) { return res.json(); })
+  .then(function () {
+    workouts = workouts.filter(function (w) { return w.Session_ID !== id; });
     showWorkouts();
   });
 
 }
 
 
-// formats a date string nicely e.g "Today · 6:00 PM"
+// turns "2026-05-06 18:00:00" into "Today · 6:00 PM"
 function niceDate(str) {
 
   if (!str) return "";
 
-  // replace the space with T so javascript can read it
   var d = new Date(str.replace(" ", "T"));
-
   if (isNaN(d)) return str;
 
   var todayStr = getDateStr(new Date());
-  var yesterday = new Date(Date.now() - 86400000);
-  var yesterdayStr = getDateStr(yesterday);
+  var yesterdayStr = getDateStr(new Date(Date.now() - 86400000));
   var thisDate = getDateStr(d);
 
   var label;
-
   if (thisDate === todayStr) {
     label = "Today";
   } else if (thisDate === yesterdayStr) {
@@ -198,9 +161,7 @@ function niceDate(str) {
     label = d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
 
-  var time = d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-
-  return label + " · " + time;
+  return label + " · " + d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
 
 }
 
@@ -220,9 +181,9 @@ function getTimeStr(d) {
   return hrs + ":" + mins;
 }
 
-// sanitise text before putting it in html
+// stops special characters breaking the page
 function safe(str) {
-  if (str === null || str === undefined || str === "") return "";
+  if (!str) return "";
   var s = String(str);
   s = s.replace(/&/g, "&amp;");
   s = s.replace(/</g, "&lt;");
@@ -230,4 +191,3 @@ function safe(str) {
   s = s.replace(/"/g, "&quot;");
   return s;
 }
-

@@ -8,7 +8,6 @@
 </head>
 <body>
 
-<!-- nav bar -->
 <nav class="nav">
   <a href="/" class="nav-logo">Fitness Companion</a>
   <div class="nav-links">
@@ -22,7 +21,6 @@
 
   <a href="/routines" class="back-link">← back to routines</a>
 
-  <!-- heading and add button -->
   <div class="top-bar">
     <div class="page-header" style="margin-bottom:0;">
       {% if routine.DESCRIPTION %}
@@ -35,7 +33,6 @@
     <button class="btn-primary" id="add-btn" onclick="openForm()">+ Add</button>
   </div>
 
-  <!-- add exercise form - hidden by default -->
   <div class="form-sheet" id="form-sheet">
     <div class="form-sheet-top">
       <span class="form-title">Add exercise</span>
@@ -79,14 +76,12 @@
     <p class="error-msg" id="error-msg"></p>
   </div>
 
-  <!-- exercise list -->
   <div class="card" style="padding: 0 20px;">
     <div id="exercise-list"></div>
   </div>
 
 </div>
 
-<!-- flask passes the data to javascript here -->
 <script type="application/json" id="exercise-data">{{ exercises | tojson | safe }}</script>
 <script type="application/json" id="routine-meta">{{ {"id": routine.ROUTINE_ID} | tojson | safe }}</script>
 <script>
@@ -94,18 +89,13 @@
   var ROUTINE_ID = JSON.parse(document.getElementById("routine-meta").textContent).id;
   var exercises = JSON.parse(document.getElementById("exercise-data").textContent);
 
-  // draw the exercise list
   function showExercises() {
 
     var list = document.getElementById("exercise-list");
     list.innerHTML = "";
 
     if (exercises.length === 0) {
-      list.innerHTML =
-        '<div class="empty">' +
-          '<div class="empty-icon"></div>' +
-          '<p>No exercises yet. Add your first one!</p>' +
-        '</div>';
+      list.innerHTML = '<div class="empty"><p>No exercises yet. Add your first one!</p></div>';
       return;
     }
 
@@ -130,21 +120,18 @@
 
   }
 
-  // open the form
   function openForm() {
     document.getElementById("form-sheet").classList.add("open");
     document.getElementById("add-btn").style.display = "none";
     document.getElementById("error-msg").textContent = "";
   }
 
-  // close the form
   function closeForm() {
     document.getElementById("form-sheet").classList.remove("open");
     document.getElementById("add-btn").style.display = "inline-flex";
     document.getElementById("input-exercise").value = "";
   }
 
-  // save the exercise
   function addExercise() {
 
     var exerciseId = document.getElementById("input-exercise").value;
@@ -169,7 +156,9 @@
         order: exercises.length + 1
       })
     })
-    .then(function (res) { return res.json(); })
+    .then(function (res) {
+      return res.json();
+    })
     .then(function (data) {
       if (data.error) {
         document.getElementById("error-msg").textContent = data.error;
@@ -182,30 +171,33 @@
 
   }
 
-  // remove an exercise
   function removeExercise(id) {
 
     if (!confirm("Remove this exercise?")) return;
 
     fetch("/remove_exercise/" + id, { method: "DELETE" })
-    .then(function (res) { return res.json(); })
+    .then(function (res) {
+      return res.json();
+    })
     .then(function (data) {
       if (data.ok) {
-        exercises = exercises.filter(function (ex) { return ex.Routine_Exercise_ID !== id; });
+        exercises = exercises.filter(function (ex) {
+          return ex.Routine_Exercise_ID !== id;
+        });
         showExercises();
       }
     });
 
   }
 
-  // stops special characters breaking the page
   function safe(str) {
     if (!str) return "";
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    var result = String(str);
+    result = result.replace(/&/g, "&amp;");
+    result = result.replace(/</g, "&lt;");
+    result = result.replace(/>/g, "&gt;");
+    result = result.replace(/"/g, "&quot;");
+    return result;
   }
 
   showExercises();
@@ -213,4 +205,3 @@
 </script>
 </body>
 </html>
-
