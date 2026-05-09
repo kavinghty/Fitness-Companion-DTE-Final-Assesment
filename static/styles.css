@@ -484,7 +484,6 @@ body {
   font-size: 12px;
   color: var(--text-grey);
 }
-
 /* mobile */
 @media (max-width: 600px) {
   .page {
@@ -500,6 +499,10 @@ body {
     gap: 0;
   }
 
+  .fields-row .field-group {
+    width: 100%;
+  }
+
   .btn-primary {
     width: 100%;
     justify-content: center;
@@ -508,15 +511,36 @@ body {
 
   .field {
     font-size: 16px;
+    padding: 11px 12px;
   }
 
   .delete-btn {
     padding: 8px;
+    font-size: 16px;
   }
 
   .nav-link {
     padding: 5px 8px;
     font-size: 13px;
   }
-}
 
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-card .num {
+    font-size: 28px;
+  }
+
+  .top-bar {
+    align-items: center;
+  }
+
+  .form-sheet {
+    padding: 16px;
+  }
+
+  .ex-tags {
+    flex-wrap: wrap;
+  }
+}
