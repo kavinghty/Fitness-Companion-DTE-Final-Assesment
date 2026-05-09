@@ -35,11 +35,13 @@ body {
   height: 52px;
 }
 
+/* make the nav logo look cleaner */
 .nav-logo {
   font-weight: 700;
   font-size: 16px;
   color: var(--text);
   text-decoration: none;
+  letter-spacing: -0.3px;
 }
 
 .nav-logo span {
@@ -162,6 +164,15 @@ body {
   gap: 10px;
   flex: 1;
 }
+
+/* the little square dot next to each workout */
+.workout-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--dark);
+  flex-shrink: 0;
+}
+
 .workout-name {
   font-size: 15px;
   font-weight: 600;
@@ -179,12 +190,21 @@ body {
   gap: 8px;
 }
 
-/* empty state */
+/* small square next to each workout */
+.workout-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--dark);
+  flex-shrink: 0;
+}
+
+/* message shown when there is nothing in a list */
 .empty {
   text-align: center;
   padding: 36px 0;
   color: var(--text-grey);
   font-size: 14px;
+  line-height: 1.6;
 }
 
 
@@ -484,6 +504,7 @@ body {
   font-size: 12px;
   color: var(--text-grey);
 }
+
 /* mobile */
 @media (max-width: 600px) {
   .page {
@@ -499,10 +520,6 @@ body {
     gap: 0;
   }
 
-  .fields-row .field-group {
-    width: 100%;
-  }
-
   .btn-primary {
     width: 100%;
     justify-content: center;
@@ -511,36 +528,14 @@ body {
 
   .field {
     font-size: 16px;
-    padding: 11px 12px;
   }
 
   .delete-btn {
     padding: 8px;
-    font-size: 16px;
   }
 
   .nav-link {
     padding: 5px 8px;
     font-size: 13px;
-  }
-
-  .stat-card {
-    padding: 12px;
-  }
-
-  .stat-card .num {
-    font-size: 28px;
-  }
-
-  .top-bar {
-    align-items: center;
-  }
-
-  .form-sheet {
-    padding: 16px;
-  }
-
-  .ex-tags {
-    flex-wrap: wrap;
   }
 }
