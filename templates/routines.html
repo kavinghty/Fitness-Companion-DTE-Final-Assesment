@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Routines – Fitness Companion</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <meta charset="UTF-8">
+  <title>Routines | Fitness Companion</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
@@ -18,164 +17,127 @@
 </nav>
 
 <div class="page">
-
   <div class="top-bar">
-    <div class="page-header" style="margin-bottom:0;">
+    <div class="page-header">
       <p class="label">Your plans</p>
-      <h1>Routines</h1>
+      <h1 style="margin-top: 5px;">Routines</h1>
     </div>
-    <button class="btn-primary" id="new-btn" onclick="openForm()">+ New</button>
+    <button class="btn-primary" id="new-btn" onclick="open_me()">+ New</button>
   </div>
 
-  <!-- new routine form -->
-  <div class="form-sheet" id="form-sheet">
+  <div class="form-sheet" id="pop-up">
     <div class="form-sheet-top">
       <span class="form-title">New routine</span>
-      <button class="close-btn" onclick="closeForm()">✕</button>
+      <button class="close-btn" onclick="close_me()">✕</button>
     </div>
     <div class="field-group">
       <label class="field-label">Name</label>
-      <input type="text" id="input-name" class="field" placeholder="e.g. Push Day, Leg Day..." />
+      <input type="text" id="rn" class="field" placeholder="Leg Day, etc">
     </div>
     <div class="field-group">
       <label class="field-label">Description</label>
-      <input type="text" id="input-desc" class="field" placeholder="Optional..." />
+      <input type="text" id="rd" class="field" placeholder="Optional notes">
     </div>
     <div class="form-actions">
-      <button class="btn-ghost" onclick="closeForm()">Cancel</button>
-      <button class="btn-primary" onclick="createRoutine()">Create</button>
+      <button class="btn-ghost" onclick="close_me()">Cancel</button>
+      <button class="btn-primary" onclick="save()">Create</button>
     </div>
-    <p class="error-msg" id="error-msg"></p>
+    <span id="msg" style="color:red; font-size:11px;"></span>
   </div>
 
   <div class="card" style="padding: 0 20px;">
-    <div id="routine-list"></div>
+    <div id="routines-here"></div>
   </div>
-
 </div>
 
-<script type="application/json" id="routine-data">{{ routines | tojson | safe }}</script>
+<script id="d" type="application/json">{{ routines | tojson | safe }}</script>
+
 <script>
+// global data from flask
+var data = JSON.parse(document.getElementById('d').innerHTML);
 
-  var routines = JSON.parse(document.getElementById("routine-data").textContent);
+function show() {
+  var list = document.getElementById('routines-here');
+  list.innerHTML = "";
 
-  function showRoutines() {
+  if(data.length == 0) {
+    list.innerHTML = '<div class="empty"><p>No routines yet.</p></div>';
+    return;
+  }
 
-    var list = document.getElementById("routine-list");
-    list.innerHTML = "";
+  // just loop through it
+  for (var i = 0; i < data.length; i++) {
+    var r = data[i];
+    var div = document.createElement('div');
+    div.className = 'workout-row';
+    
+    var info = r.DESCRIPTION ? '<div class="workout-meta">' + h(r.DESCRIPTION) + '</div>' : '';
 
-    if (routines.length === 0) {
-      list.innerHTML = '<div class="empty"><p>No routines yet. Create your first one!</p></div>';
-      return;
+    div.innerHTML = '<div class="workout-left"><div>' +
+      '<div class="workout-name"><a href="/routines/' + r.ROUTINE_ID + '" class="link-name">' + h(r.ROUTINE_NAME) + '</a></div>' +
+      info + '</div></div>' +
+      '<button class="delete-btn" onclick="drop(' + r.ROUTINE_ID + ')">✕</button>';
+    
+    list.appendChild(div);
+  }
+}
+
+function open_me() {
+  document.getElementById('pop-up').classList.add('open');
+  document.getElementById('new-btn').style.display = 'none';
+}
+
+function close_me() {
+  document.getElementById('pop-up').classList.remove('open');
+  document.getElementById('new-btn').style.display = 'inline-flex';
+  document.getElementById('rn').value = '';
+  document.getElementById('rd').value = '';
+}
+
+function save() {
+  var n = document.getElementById('rn').value;
+  var d = document.getElementById('rd').value;
+
+  if(!n.trim()) {
+    document.getElementById('msg').innerText = "Needs a name";
+    return;
+  }
+
+  fetch('/create_routine', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({name: n, description: d})
+  }).then(function(r) { return r.json() }).then(function(res) {
+    if(res.error) {
+      document.getElementById('msg').innerText = res.error;
+    } else {
+      data.push(res);
+      show();
+      close_me();
     }
+  });
+}
 
-    // loop through and make a row for each routine
-    for (var i = 0; i < routines.length; i++) {
-
-      var r = routines[i];
-
-      var row = document.createElement("div");
-      row.className = "workout-row";
-
-      var descHtml = "";
-      if (r.DESCRIPTION) {
-        descHtml = '<div class="workout-meta">' + safe(r.DESCRIPTION) + '</div>';
-      }
-
-      row.innerHTML =
-        '<div class="workout-left">' +
-          '<div>' +
-            '<div class="workout-name">' +
-              '<a href="/routines/' + r.ROUTINE_ID + '" class="link-name">' + safe(r.ROUTINE_NAME) + '</a>' +
-            '</div>' +
-            descHtml +
-          '</div>' +
-        '</div>' +
-        '<button class="delete-btn" onclick="deleteRoutine(' + r.ROUTINE_ID + ')">✕</button>';
-
-      list.appendChild(row);
+function drop(id) {
+  if(!confirm("Delete this?")) return;
+  fetch('/delete_routine/' + id, {method: 'DELETE'})
+  .then(function(r) { return r.json() }).then(function(res) {
+    if(res.ok) {
+      data = data.filter(function(x) { return x.ROUTINE_ID != id });
+      show();
     }
+  });
+}
 
-  }
+// simple html escaper
+function h(s) {
+  var el = document.createElement('div');
+  el.innerText = s;
+  return el.innerHTML;
+}
 
-  function openForm() {
-    document.getElementById("form-sheet").classList.add("open");
-    document.getElementById("new-btn").style.display = "none";
-    document.getElementById("error-msg").textContent = "";
-  }
-
-  function closeForm() {
-    document.getElementById("form-sheet").classList.remove("open");
-    document.getElementById("new-btn").style.display = "inline-flex";
-    // clear the inputs
-    document.getElementById("input-name").value = "";
-    document.getElementById("input-desc").value = "";
-  }
-
-  function createRoutine() {
-
-    var name = document.getElementById("input-name").value.trim();
-    var desc = document.getElementById("input-desc").value.trim();
-
-    if (name === "") {
-      document.getElementById("error-msg").textContent = "Please enter a name.";
-      return;
-    }
-
-    fetch("/create_routine", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: name, description: desc })
-    })
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      if (data.error) {
-        document.getElementById("error-msg").textContent = data.error;
-        return;
-      }
-      routines.push(data);
-      showRoutines();
-      closeForm();
-    });
-
-  }
-
-  function deleteRoutine(id) {
-
-    if (!confirm("Delete this routine?")) return;
-
-    fetch("/delete_routine/" + id, { method: "DELETE" })
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      if (data.ok) {
-        // filter out the deleted one
-        routines = routines.filter(function (r) {
-          return r.ROUTINE_ID !== id;
-        });
-        showRoutines();
-      }
-    });
-
-  }
-
-  function safe(str) {
-    if (!str) return "";
-    var result = String(str);
-    result = result.replace(/&/g, "&amp;");
-    result = result.replace(/</g, "&lt;");
-    result = result.replace(/>/g, "&gt;");
-    result = result.replace(/"/g, "&quot;");
-    return result;
-  }
-
-  // run on load
-  showRoutines();
-
+show();
 </script>
+
 </body>
 </html>
-

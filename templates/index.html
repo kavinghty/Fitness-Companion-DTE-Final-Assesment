@@ -1,87 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fitness Companion</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
-<body style="background-color: #f4f4f4;"> <div id="TopNavigation">
-  <a href="/" class="logo">Fitness Companion</a>
-  <ul style="display: inline; list-style-type: none;">
-    <li style="display: inline; margin-right: 10px;"><a href="/">Today</a></li>
-    <li style="display: inline; margin-right: 10px;"><a href="/routines">Routines</a></li>
-    <li style="display: inline;"><a href="/stats">Stats</a></li>
-  </ul>
-</div>
+<body>
 
-<div class="container">
+<!-- nav bar -->
+<nav class="nav">
+  <a href="/" class="nav-logo">Fitness Companion</a>
+  <div class="nav-links">
+    <a href="/" class="nav-link active">Today</a>
+    <a href="/routines" class="nav-link">Routines</a>
+    <a href="/stats" class="nav-link">Stats</a>
+  </div>
+</nav>
 
-  <div class="header-area">
-    <p id="DisplayDate"></p>
-    <h1 style="margin-top: 5px;">Today</h1>
+<div class="page">
+
+  <!-- heading -->
+  <div class="page-header">
+    <p class="label" id="date-label"></p>
+    <h1>Today</h1>
   </div>
 
-  <button class="blue-btn" id="OpenFormBtn" onclick="openForm()">
+  <!-- stats -->
+  <div class="stats-strip">
+    <div class="stat-card">
+      <div class="num dark" id="stat-workouts">0</div>
+      <div class="lbl">workouts today</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-minutes">0</div>
+      <div class="lbl">minutes</div>
+    </div>
+  </div>
+
+  <!-- log workout button -->
+  <button class="btn-primary" id="log-btn" onclick="openForm()" style="margin-bottom:20px;">
     + Log workout
   </button>
 
-  <div class="StatsSection">
-    <div class="Box1">
-      <span class="BigNumber" id="stat-workouts">0</span>
-      <p>workouts today</p>
-    </div>
-    <div class="Box2">
-      <span class="BigNumber" id="stat-minutes">0</span>
-      <p>minutes</p>
-    </div>
-  </div>
-
-  <br>
-
-  <div id="WorkoutPopup" class="form_style" style="display:none;">
-    <div class="top-row">
-      <h2 style="display:inline;">Log a workout</h2>
-      <button type="button" onclick="closeForm()">X</button>
+  <!-- log workout form - hidden by default -->
+  <div class="form-sheet" id="form-sheet">
+    <div class="form-sheet-top">
+      <span class="form-title">Log a workout</span>
+      <button class="close-btn" onclick="closeForm()">✕</button>
     </div>
 
-    <div class="input-block">
-      <label>Choose Routine:</label>
-      <select id="routine_select">
-        <option value="">-- Please Select --</option>
+    <div class="field-group">
+      <label class="field-label">Routine</label>
+      <select id="input-routine" class="field">
+        <option value="" disabled selected>Pick a routine...</option>
         {% for r in routines %}
         <option value="{{ r.ROUTINE_ID }}">{{ r.ROUTINE_NAME }}</option>
         {% endfor %}
       </select>
     </div>
 
-    <div class="input-block">
-      <label>Date of workout:</label>
-      <input type="date" id="date_input">
-    </div>
-
-    <div class="input-block">
-      <label>Time:</label>
-      <input type="time" id="time_input">
-    </div>
-
-    <div class="buttons">
-      <button type="button" onclick="closeForm()">Nevermind</button>
-      <button type="button" class="save-btn" onclick="addWorkout()">Save Workout</button>
-    </div>
-
-    <p id="error_text" style="color:red;"></p>
-  </div>
-  <h3 class="title2">Workout log</h3>
-  <div class="list-container">
-    <div id="workout-list">
+    <div class="fields-row">
+      <div class="field-group">
+        <label class="field-label">Date</label>
+        <input type="date" id="input-date" class="field" />
       </div>
+      <div class="field-group">
+        <label class="field-label">Time</label>
+        <input type="time" id="input-time" class="field" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-ghost" onclick="closeForm()">Cancel</button>
+      <button class="btn-primary" onclick="addWorkout()">Save</button>
+    </div>
+
+    <p class="error-msg" id="error-msg"></p>
+  </div>
+
+  <!-- workout list -->
+  <p class="section-heading">Workout log</p>
+  <div class="card" style="padding: 0 20px;">
+    <div id="workout-list"></div>
   </div>
 
 </div>
 
-<script id="workout-data" type="application/json">{{ workouts | tojson | safe }}</script>
-
+<!-- flask passes the workouts to javascript here -->
+<script type="application/json" id="workout-data">{{ workouts | tojson | safe }}</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-
 </body>
 </html>
+
