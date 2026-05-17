@@ -1,3 +1,13 @@
+<!--
+  =============================================
+  File:    routine_detail.html
+  Purpose: Shows a single routine and its exercises
+           Users can add and remove exercises here
+  Author:  Kavinghty
+  Updated: May 2026
+  =============================================
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +18,7 @@
 </head>
 <body>
 
+<!-- Main navigation bar -->
 <nav class="nav">
   <a href="/" class="nav-logo">Fitness Companion</a>
   <div class="nav-links">
@@ -19,8 +30,10 @@
 
 <div class="page">
 
+  <!-- Back link to return to routines list -->
   <a href="/routines" class="back-link">← back to routines</a>
 
+  <!-- Page heading and add exercise button -->
   <div class="top-bar">
     <div class="page-header" style="margin-bottom:0;">
       {% if routine.DESCRIPTION %}
@@ -33,12 +46,14 @@
     <button class="btn-primary" id="add-btn" onclick="openForm()">+ Add</button>
   </div>
 
+  <!-- Add exercise form - hidden by default, opens when button is clicked -->
   <div class="form-sheet" id="form-sheet">
     <div class="form-sheet-top">
       <span class="form-title">Add exercise</span>
       <button class="close-btn" onclick="closeForm()">✕</button>
     </div>
 
+    <!-- Exercise dropdown - populated from the database by Flask -->
     <div class="field-group">
       <label class="field-label">Exercise</label>
       <select id="input-exercise" class="field">
@@ -49,6 +64,7 @@
       </select>
     </div>
 
+    <!-- Sets, reps, weight and rest time fields side by side -->
     <div class="fields-row">
       <div class="field-group">
         <label class="field-label">Sets</label>
@@ -68,20 +84,24 @@
       </div>
     </div>
 
+    <!-- Form action buttons -->
     <div class="form-actions">
       <button class="btn-ghost" onclick="closeForm()">Cancel</button>
       <button class="btn-primary" onclick="addExercise()">Add</button>
     </div>
 
+    <!-- Error message shown if no exercise is selected -->
     <p class="error-msg" id="error-msg"></p>
   </div>
 
+  <!-- Exercise list - rows are added here by JavaScript -->
   <div class="card" style="padding: 0 20px;">
     <div id="exercise-list"></div>
   </div>
 
 </div>
 
+<!-- Exercise and routine data passed from Flask into JavaScript -->
 <script type="application/json" id="exercise-data">{{ exercises | tojson | safe }}</script>
 <script type="application/json" id="routine-meta">{{ {"id": routine.ROUTINE_ID} | tojson | safe }}</script>
 <script>
@@ -89,6 +109,7 @@
   var ROUTINE_ID = JSON.parse(document.getElementById("routine-meta").textContent).id;
   var exercises = JSON.parse(document.getElementById("exercise-data").textContent);
 
+  /* ---- Display exercises ---- */
   function showExercises() {
 
     var list = document.getElementById("exercise-list");
@@ -120,6 +141,7 @@
 
   }
 
+  /* ---- Open and close the form ---- */
   function openForm() {
     document.getElementById("form-sheet").classList.add("open");
     document.getElementById("add-btn").style.display = "none";
@@ -132,6 +154,7 @@
     document.getElementById("input-exercise").value = "";
   }
 
+  /* ---- Save a new exercise to the routine ---- */
   function addExercise() {
 
     var exerciseId = document.getElementById("input-exercise").value;
@@ -171,6 +194,7 @@
 
   }
 
+  /* ---- Remove an exercise from the routine ---- */
   function removeExercise(id) {
 
     if (!confirm("Remove this exercise?")) return;
@@ -190,6 +214,7 @@
 
   }
 
+  /* ---- Stops special characters breaking the page ---- */
   function safe(str) {
     if (!str) return "";
     var result = String(str);
@@ -200,6 +225,7 @@
     return result;
   }
 
+  // run on load
   showExercises();
 
 </script>

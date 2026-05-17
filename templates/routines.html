@@ -1,3 +1,13 @@
+<!--
+  =============================================
+  File:    routines.html
+  Purpose: Routines page - allows users to view,
+           create and delete their workout routines
+  Author:  Kavinghty
+  Updated: May 2026
+  =============================================
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +18,7 @@
 </head>
 <body>
 
+<!-- Main navigation bar -->
 <nav class="nav">
   <a href="/" class="nav-logo">Fitness Companion</a>
   <div class="nav-links">
@@ -19,6 +30,7 @@
 
 <div class="page">
 
+  <!-- Page heading and new routine button -->
   <div class="top-bar">
     <div class="page-header" style="margin-bottom:0;">
       <p class="label">Your plans</p>
@@ -27,38 +39,49 @@
     <button class="btn-primary" id="new-btn" onclick="openForm()">+ New</button>
   </div>
 
-  <!-- new routine form -->
+  <!-- New routine form - hidden by default, opens when button is clicked -->
   <div class="form-sheet" id="form-sheet">
     <div class="form-sheet-top">
       <span class="form-title">New routine</span>
       <button class="close-btn" onclick="closeForm()">✕</button>
     </div>
+
+    <!-- Routine name input -->
     <div class="field-group">
       <label class="field-label">Name</label>
       <input type="text" id="input-name" class="field" placeholder="e.g. Push Day, Leg Day..." />
     </div>
+
+    <!-- Optional description input -->
     <div class="field-group">
       <label class="field-label">Description</label>
       <input type="text" id="input-desc" class="field" placeholder="Optional..." />
     </div>
+
+    <!-- Form action buttons -->
     <div class="form-actions">
       <button class="btn-ghost" onclick="closeForm()">Cancel</button>
       <button class="btn-primary" onclick="createRoutine()">Create</button>
     </div>
+
+    <!-- Error message shown if name is not filled in -->
     <p class="error-msg" id="error-msg"></p>
   </div>
 
+  <!-- Routine list - rows are added here by JavaScript -->
   <div class="card" style="padding: 0 20px;">
     <div id="routine-list"></div>
   </div>
 
 </div>
 
+<!-- Routine data passed from Flask into JavaScript -->
 <script type="application/json" id="routine-data">{{ routines | tojson | safe }}</script>
 <script>
 
   var routines = JSON.parse(document.getElementById("routine-data").textContent);
 
+  /* ---- Display routines ---- */
   function showRoutines() {
 
     var list = document.getElementById("routine-list");
@@ -98,6 +121,7 @@
 
   }
 
+  /* ---- Open and close the form ---- */
   function openForm() {
     document.getElementById("form-sheet").classList.add("open");
     document.getElementById("new-btn").style.display = "none";
@@ -112,6 +136,7 @@
     document.getElementById("input-desc").value = "";
   }
 
+  /* ---- Save a new routine to the database ---- */
   function createRoutine() {
 
     var name = document.getElementById("input-name").value.trim();
@@ -142,6 +167,7 @@
 
   }
 
+  /* ---- Delete a routine from the database ---- */
   function deleteRoutine(id) {
 
     if (!confirm("Delete this routine?")) return;
@@ -162,6 +188,7 @@
 
   }
 
+  /* ---- Stops special characters breaking the page ---- */
   function safe(str) {
     if (!str) return "";
     var result = String(str);
@@ -178,4 +205,3 @@
 </script>
 </body>
 </html>
-

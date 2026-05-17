@@ -1,3 +1,13 @@
+// =============================================
+// File:    script.js
+// Purpose: Handles all JavaScript for the
+//          homepage - displays workouts, opens
+//          and closes the form, saves and
+//          deletes workouts
+// Author:  Kavinghty
+// Updated: May 2026
+// =============================================
+
 // load workouts from the page
 var workouts = JSON.parse(document.getElementById("workout-data").textContent);
 
@@ -101,21 +111,20 @@ function showWorkouts() {
 }
 
 
-// opens the form
+/* ---- Open and close the form ---- */
 function openForm() {
   document.getElementById("form-sheet").classList.add("open");
   document.getElementById("log-btn").style.display = "none";
   document.getElementById("error-msg").textContent = "";
 }
 
-// closes the form
 function closeForm() {
   document.getElementById("form-sheet").classList.remove("open");
   document.getElementById("log-btn").style.display = "inline-flex";
 }
 
 
-// saves a new workout to the database
+/* ---- Save a new workout to the database ---- */
 function addWorkout() {
 
   var routineId = document.getElementById("input-routine").value;
@@ -171,7 +180,7 @@ function addWorkout() {
 }
 
 
-// deletes a workout
+/* ---- Delete a workout from the database ---- */
 function deleteWorkout(id) {
 
   var answer = confirm("Delete this workout?");
@@ -201,6 +210,8 @@ function deleteWorkout(id) {
 
 }
 
+
+/* ---- Helper functions ---- */
 
 // formats a date string into something readable like Today 6:00 PM
 function niceDate(str) {
@@ -232,7 +243,6 @@ function niceDate(str) {
 
 }
 
-
 // returns the date as YYYY-MM-DD
 function getDateStr(d) {
   var year = d.getFullYear();
@@ -241,14 +251,12 @@ function getDateStr(d) {
   return year + "-" + month + "-" + day;
 }
 
-
 // returns the time as HH:MM
 function getTimeStr(d) {
   var hrs = String(d.getHours()).padStart(2, "0");
   var mins = String(d.getMinutes()).padStart(2, "0");
   return hrs + ":" + mins;
 }
-
 
 // makes text safe to put inside html
 function safe(str) {

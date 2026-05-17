@@ -1,3 +1,12 @@
+# =============================================
+# File:    app.py
+# Purpose: Main Flask application - handles all
+#          routes and database queries for
+#          Fitness Companion
+# Author:  Kavinghty
+# Updated: May 2026
+# =============================================
+
 import sqlite3
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime, timedelta
@@ -5,12 +14,14 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 
+# Opens a connection to the database
 def get_db():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
 
 
+# Home page - loads all workouts and routines
 @app.route("/")
 def index():
     db = get_db()
@@ -30,6 +41,7 @@ def index():
     )
 
 
+# Saves a new workout to the database
 @app.route("/add_workout", methods=["POST"])
 def add_workout():
     data = request.get_json()
@@ -52,6 +64,7 @@ def add_workout():
     return jsonify(dict(new_workout)), 201
 
 
+# Deletes a workout from the database
 @app.route("/delete_workout/<int:id>", methods=["DELETE"])
 def delete_workout(id):
     db = get_db()
@@ -62,6 +75,7 @@ def delete_workout(id):
     return jsonify({"ok": True})
 
 
+# Routines page - loads all routines
 @app.route("/routines")
 def routines():
     db = get_db()
@@ -70,6 +84,7 @@ def routines():
     return render_template("routines.html", routines=[dict(r) for r in rows])
 
 
+# Saves a new routine to the database
 @app.route("/create_routine", methods=["POST"])
 def create_routine():
     data = request.get_json()
@@ -85,6 +100,7 @@ def create_routine():
     return jsonify(dict(new)), 201
 
 
+# Deletes a routine and its exercises from the database
 @app.route("/delete_routine/<int:id>", methods=["DELETE"])
 def delete_routine(id):
     db = get_db()
@@ -95,6 +111,7 @@ def delete_routine(id):
     return jsonify({"ok": True})
 
 
+# Single routine page - loads exercises for that routine
 @app.route("/routines/<int:id>")
 def routine_detail(id):
     db = get_db()
@@ -118,6 +135,7 @@ def routine_detail(id):
     )
 
 
+# Adds an exercise to a routine
 @app.route("/add_exercise_to_routine", methods=["POST"])
 def add_exercise_to_routine():
     data = request.get_json()
@@ -147,6 +165,7 @@ def add_exercise_to_routine():
     return jsonify(dict(new)), 201
 
 
+# Removes an exercise from a routine
 @app.route("/remove_exercise/<int:id>", methods=["DELETE"])
 def remove_exercise(id):
     db = get_db()
@@ -156,6 +175,7 @@ def remove_exercise(id):
     return jsonify({"ok": True})
 
 
+# Stats page - counts workouts and builds chart data
 @app.route("/stats")
 def stats():
     db = get_db()

@@ -1,3 +1,13 @@
+<!--
+  =============================================
+  File:    index.html
+  Purpose: Main homepage - shows todays workouts
+           and allows the user to log a new one
+  Author:  Kavinghty
+  Updated: May 2026
+  =============================================
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +18,7 @@
 </head>
 <body>
 
-<!-- nav bar -->
+<!-- Main navigation bar -->
 <nav class="nav">
   <a href="/" class="nav-logo">Fitness Companion</a>
   <div class="nav-links">
@@ -20,13 +30,13 @@
 
 <div class="page">
 
-  <!-- heading -->
+  <!-- Page heading - date gets filled in by script.js -->
   <div class="page-header">
     <p class="label" id="date-label"></p>
     <h1>Today</h1>
   </div>
 
-  <!-- stats -->
+  <!-- Stats strip - shows workouts today and minutes -->
   <div class="stats-strip">
     <div class="stat-card">
       <div class="num dark" id="stat-workouts">0</div>
@@ -38,18 +48,19 @@
     </div>
   </div>
 
-  <!-- log workout button -->
+  <!-- Button to open the log workout form -->
   <button class="btn-primary" id="log-btn" onclick="openForm()" style="margin-bottom:20px;">
     + Log workout
   </button>
 
-  <!-- log workout form - hidden by default -->
+  <!-- Log workout form - hidden by default, opens when button is clicked -->
   <div class="form-sheet" id="form-sheet">
     <div class="form-sheet-top">
       <span class="form-title">Log a workout</span>
       <button class="close-btn" onclick="closeForm()">✕</button>
     </div>
 
+    <!-- Routine dropdown - populated from the database by Flask -->
     <div class="field-group">
       <label class="field-label">Routine</label>
       <select id="input-routine" class="field">
@@ -60,6 +71,7 @@
       </select>
     </div>
 
+    <!-- Date and time fields sit side by side -->
     <div class="fields-row">
       <div class="field-group">
         <label class="field-label">Date</label>
@@ -71,15 +83,17 @@
       </div>
     </div>
 
+    <!-- Form action buttons -->
     <div class="form-actions">
       <button class="btn-ghost" onclick="closeForm()">Cancel</button>
       <button class="btn-primary" onclick="addWorkout()">Save</button>
     </div>
 
+    <!-- Error message shown if fields are not filled in correctly -->
     <p class="error-msg" id="error-msg"></p>
   </div>
 
-  <!-- workout list -->
+  <!-- Workout list - rows are added here by script.js -->
   <p class="section-heading">Workout log</p>
   <div class="card" style="padding: 0 20px;">
     <div id="workout-list"></div>
@@ -87,9 +101,8 @@
 
 </div>
 
-<!-- flask passes the workouts to javascript here -->
+<!-- Workout data passed from Flask into JavaScript -->
 <script type="application/json" id="workout-data">{{ workouts | tojson | safe }}</script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-

@@ -1,3 +1,14 @@
+/*
+  =============================================
+  File:    styles.css
+  Purpose: Main stylesheet for Fitness Companion
+           covers layout, nav, forms, buttons,
+           cards, chart and mobile styles
+  Author:  Kavinghty
+  Updated: May 2026
+  =============================================
+*/
+
 /* reset */
 * {
   margin: 0;
@@ -105,7 +116,7 @@ body {
   margin-bottom: 12px;
 }
 
-/* stats strip */
+/* stats strip on homepage */
 .stats-strip {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -207,7 +218,6 @@ body {
   line-height: 1.6;
 }
 
-
 /* dark button */
 .btn-primary {
   background: var(--dark);
@@ -264,7 +274,7 @@ body {
   margin-bottom: 16px;
 }
 
-/* form that slides in */
+/* form that slides in when button is clicked */
 .form-sheet {
   background: var(--white);
   border: 1px solid var(--dark);
@@ -505,7 +515,7 @@ body {
   color: var(--text-grey);
 }
 
-/* mobile */
+/* mobile - adjusts layout for smaller screens */
 @media (max-width: 600px) {
   .page {
     padding: 20px 14px 60px;
